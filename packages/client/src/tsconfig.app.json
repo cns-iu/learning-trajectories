@@ -1,0 +1,22 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/app",
+    "baseUrl": "./",
+    "module": "es2015",
+    "types": []
+  },
+  "exclude": [
+    "test.ts",
+    "../../../**/*.spec.ts",
+    "../../../**/*.d.ts",
+    "../../../**/*-spec.ts",
+    "../../../ngx-dino/packages/dino-*/node_modules/**/*.ts",
+    "../../../ngx-dino/packages/dino-core/src/v2/test-*/**/*.ts"
+  ],
+  "include" : [
+    "**/*.ts",
+    "../../../ngx-dino/packages/dino-*/**/*.ts"
+  ]
+}
+
