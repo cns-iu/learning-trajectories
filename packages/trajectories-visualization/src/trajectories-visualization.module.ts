@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 
+import { TrajectoriesComponent } from './trajectories/trajectories.component';
+
 @NgModule({
   imports: [],
-  exports: [],
-  providers: [],
+  exports: [TrajectoriesComponent],
+  declarations: [TrajectoriesComponent],
 })
 export class TrajectoriesVisualizationModule { }

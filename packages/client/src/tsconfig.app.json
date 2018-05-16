@@ -16,6 +16,7 @@
   ],
   "include" : [
     "**/*.ts",
+    "../../trajectories-visualization/**/*.ts",
     "../../../ngx-dino/packages/dino-*/**/*.ts"
   ]
 }
