@@ -71,3 +71,8 @@ yarn.lock
 
 # Annoying Mac file
 .DS_Store
+
+# Compiled code/data
+build/
+dist/
+
