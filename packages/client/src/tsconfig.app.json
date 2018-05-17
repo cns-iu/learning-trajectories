@@ -12,7 +12,8 @@
     "../../../**/*.d.ts",
     "../../../**/*-spec.ts",
     "../../../ngx-dino/packages/dino-*/node_modules/**/*.ts",
-    "../../../ngx-dino/packages/dino-core/src/v2/test-*/**/*.ts"
+    "../../../ngx-dino/packages/dino-core/src/v2/test-*/**/*.ts",
+    "../../dino-*/node_modules/**/*.ts"
   ],
   "include" : [
     "**/*.ts",
@@ -20,4 +21,3 @@
     "../../../ngx-dino/packages/dino-*/**/*.ts"
   ]
 }
-
