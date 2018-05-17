@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { SharedModule } from '../shared';
 
-import { TrajectoriesVisualizationModule } from 'trajectories-visualization';
+import { DinoLinearNetworkModule } from '@ngx-dino/linear-network';
 
 import { HomeComponent } from './home/home.component';
 
@@ -13,7 +13,7 @@ import { HomeComponent } from './home/home.component';
 
     SharedModule, 
     
-    TrajectoriesVisualizationModule
+    DinoLinearNetworkModule
   ],
   exports: [
     HomeComponent

@@ -1,6 +1,6 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
-  "name": "trajectories-visualization",
+  "name": "@ngx-dino/linear-network",
   "version": "0.0.0",
   "license": "MIT",
   "main": "dist/index.js",
