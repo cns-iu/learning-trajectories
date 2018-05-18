@@ -1,0 +1,7 @@
+<mat-form-field class="personSelector">
+    <mat-select placeholder="Select Person">
+      <mat-option *ngFor="let person of persons" [value]="person.value">
+        {{ person.viewValue }}
+      </mat-option>
+    </mat-select>
+</mat-form-field>
