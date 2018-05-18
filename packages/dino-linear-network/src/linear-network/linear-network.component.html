@@ -1,3 +1,13 @@
-<p>
-  "Linear Network" works!
-</p>
+<svg>
+  <g class="node-group">
+    <circle *ngFor="let node of sortedNodes; let i = index; trackBy: trackByNode"
+        [attr.r]="50"
+        [attr.cx]="50 * (i + 1)"
+        [attr.cy]="50 * (i + 1)">
+    </circle>
+  </g>
+
+  <g class="edge-group">
+    <!-- TODO -->
+  </g>
+</svg>
