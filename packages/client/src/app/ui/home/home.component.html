@@ -8,15 +8,36 @@
       [opened] = "true"
       class="sidenavContainer"
       (openedChange)="openState = $event">
-        <p class="sidenavTitle">
-          Filters
-        </p>
+        <p class="sidenavTitle">Filter</p>
         <hr>
-      <p class="sidenavTitle">Legend</p>
-      <hr>
+        <mat-form-field class="personSelector">
+          <mat-select placeholder="Select Person">
+            <mat-option *ngFor="let person of persons" [value]="person.value">
+              {{ person.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <p class="sidenavTitle">Animation Controls</p>
+        <hr>
+        <div class="animationControls">
+            <button mat-icon-button (click)="onPlayToggle()" >
+                <mat-icon>
+                  {{playPauseIcon}}
+                </mat-icon>
+            </button>
+            <button mat-icon-button (click)="onStop()">
+                <mat-icon>
+                  stop
+                </mat-icon>
+            </button>
+        </div>
+        <p class="sidenavTitle legend">Legend</p>
+        <hr>
+        <app-visualization-legends></app-visualization-legends>
     </mat-sidenav>
 
     <mat-sidenav-content>
-      <dino-linear-network></dino-linear-network>
+      <app-visualization-wrapper></app-visualization-wrapper>
+        <p class='temporary'></p>
     </mat-sidenav-content>
   </mat-sidenav-container>

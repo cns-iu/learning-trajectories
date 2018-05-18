@@ -6,6 +6,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+
 
 @NgModule({
   imports: [
@@ -15,7 +18,9 @@ import { MatIconModule } from '@angular/material/icon';
     MatTabsModule,
     MatSidenavModule,
     MatToolbarModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule,
+    MatButtonModule
   ],
   exports: [
     BrowserAnimationsModule,
@@ -24,7 +29,9 @@ import { MatIconModule } from '@angular/material/icon';
     MatTabsModule,
     MatSidenavModule,
     MatToolbarModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule,
+    MatButtonModule
   ],
   declarations: []
 })
