@@ -7,4 +7,10 @@ export interface NodeData {
   // TODO
 }
 
+export interface NodeLayoutData {
+  x: number;
+  radius: number;
+}
+
 export type Node = Datum<any> & NodeData;
+export type LayoutNode = Datum<Node> & NodeData & NodeLayoutData;

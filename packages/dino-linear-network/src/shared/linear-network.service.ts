@@ -47,7 +47,7 @@ function nodeSorter(node1: Node, node2: Node): number {
 export class LinearNetworkService {
   private nodeProcessor: DataProcessor<any, Node>;
   private nodeSubscription: Subscription;
-  public sortedNodes = new Subject<Node[]>();
+  readonly sortedNodes = new Subject<Node[]>();
 
 
   constructor(private service: DataProcessorService) {  }

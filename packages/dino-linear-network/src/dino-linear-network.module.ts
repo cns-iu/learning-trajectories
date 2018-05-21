@@ -5,6 +5,7 @@ import { LinearNetworkComponent } from './linear-network/linear-network.componen
 
 import { DataProcessorService } from '@ngx-dino/core';
 import { LinearNetworkService } from './shared/linear-network.service';
+import { LinearNetworkLayoutService } from './shared/linear-network-layout.service';
 
 @NgModule({
   imports: [CommonModule],
@@ -12,7 +13,8 @@ import { LinearNetworkService } from './shared/linear-network.service';
   declarations: [LinearNetworkComponent],
   providers: [
     DataProcessorService,
-    LinearNetworkService
+    LinearNetworkService,
+    LinearNetworkLayoutService
   ]
 })
 export class DinoLinearNetworkModule { }
