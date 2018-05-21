@@ -17,6 +17,8 @@ import {
 } from '../shared/linear-network-layout.service';
 
 
+// For testing
+// TODO Remove later
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/delay';
@@ -30,7 +32,8 @@ import {access} from '@ngx-dino/core/src/v2/operators/methods/extracting/access'
 })
 export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
   // Data input
-  @Input() nodeStream: Observable<RawChangeSet> = Observable.of(RawChangeSet.fromArray(Array(100).fill(0).map((_, index) => {
+  // TODO Remove testing stuff (temp data and fields) later
+  @Input() nodeStream: Observable<RawChangeSet> = Observable.of(RawChangeSet.fromArray(Array(40).fill(0).map((_, index) => {
       return {id: index, order: index, weight: 1};
   })));
 
@@ -65,7 +68,7 @@ export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
       this.getIdMap(),
       this.getFieldMap()
     );
-    console.log(this);
+    console.log(this); // TODO Remove me later
   }
 
   ngOnChanges(changes: SimpleChanges): void {
