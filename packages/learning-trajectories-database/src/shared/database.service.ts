@@ -13,25 +13,40 @@ export class DatabaseService {
 
   getNodes(filter: Partial<Filter> = {}): Observable<CourseModule[]> {
     if (filter.personName && database.linearNetworks.has(filter.personName)) {
-      return Observable.of(database.linearNetworks.get(filter.personName).nodes);
+      // TODO 'course-filter', right now it returns the nodes for the first course taken
+      return Observable.of(
+        database.linearNetworks.get(filter.personName).first().nodes
+        );
     } else {
-      return Observable.of(database.linearNetworks.get(database.linearNetworks.keySeq().first()).nodes);
+      return Observable.of(
+        database.linearNetworks.get(database.linearNetworks.keySeq().first()).first().nodes
+      );
     }
   }
 
   getEdges(filter: Partial<Filter> = {}): Observable<Transition[]> {
     if (filter.personName && database.linearNetworks.has(filter.personName)) {
-      return Observable.of(database.linearNetworks.get(filter.personName).edges);
+      // TODO 'course-filter', right now it returns the edges for the first course taken
+      return Observable.of(
+        database.linearNetworks.get(filter.personName).first().edges
+      );
     } else {
-      return Observable.of(database.linearNetworks.get(database.linearNetworks.keySeq().first()).edges);
+      return Observable.of(
+        database.linearNetworks.get(database.linearNetworks.keySeq().first()).first().edges
+      );
     }
   }
 
-  getRawPersonName(filter: Partial<Filter> = {}): string {
+  getRawPersonName(filter: Partial<Filter> = {}): Observable<string> {
     if (filter.personName && database.linearNetworks.has(filter.personName)) {
-      return database.linearNetworks.get(filter.personName).rawPersonName;
+      // TODO 'course-filter', right now it returns the rawPersonName for the first course taken
+      return Observable.of(
+        database.linearNetworks.get(filter.personName).first().rawPersonName
+      );
     } else {
-      return database.linearNetworks.get(database.linearNetworks.keySeq().first()).rawPersonName;
+      return Observable.of(
+        database.linearNetworks.get(database.linearNetworks.keySeq().first()).first().rawPersonName
+      );
     }
   }
 
