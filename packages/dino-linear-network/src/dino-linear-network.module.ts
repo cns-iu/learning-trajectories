@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTooltipModule } from '@angular/material';
 
 import { LinearNetworkComponent } from './linear-network/linear-network.component';
 
@@ -12,7 +13,8 @@ import { LinearNetworkLayoutService } from './shared/linear-network-layout.servi
 @NgModule({
   imports: [
     CommonModule,
-    BrowserModule, BrowserAnimationsModule
+    BrowserModule, BrowserAnimationsModule,
+    MatTooltipModule
   ],
   exports: [LinearNetworkComponent],
   declarations: [LinearNetworkComponent],

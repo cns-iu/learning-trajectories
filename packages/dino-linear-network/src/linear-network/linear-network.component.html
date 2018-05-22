@@ -1,13 +1,19 @@
 <svg #container [attr.width]="overflow ? width : '100%'">
-  <g class="node-group">
-    <circle *ngFor="let node of nodes; trackBy: trackByNode"
-        [attr.r]="node.radius"
-        [attr.cx]="node.x"
-        [attr.cy]="height / 2">
-    </circle>
+  <g class="edge-group">
+    <path *ngFor="let edge of edges; trackBy: trackByEdge"
+        [matTooltip]="'FIXME'" [matTooltipPosition]="'above'"
+        [attr.d]="edge.path">
+    </path>
+    <!-- TODO -->
   </g>
 
-  <g class="edge-group">
-    <!-- TODO -->
+  <g class="node-group">
+    <circle *ngFor="let node of nodes; trackBy: trackByNode"
+        [matTooltip]="'FIXME'" [matTooltipPosition]="'above'"
+        [attr.r]="node.radius"
+        [attr.cx]="node.x"
+        [attr.cy]="height / 2"
+        [style.fill]='node.color'>
+    </circle>
   </g>
 </svg>

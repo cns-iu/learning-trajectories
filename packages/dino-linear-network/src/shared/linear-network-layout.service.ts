@@ -2,7 +2,9 @@ import { Injectable, SimpleChanges } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/combineLatest';
 
+import { Map } from 'immutable';
 import { isFunction, assign } from 'lodash';
 
 import {
@@ -11,7 +13,11 @@ import {
   RawChangeSet
 } from '@ngx-dino/core';
 import { Node, LayoutNode } from './node';
-import { LinearNetworkService } from './linear-network.service';
+import { Edge, LayoutEdge } from './edge';
+import {
+  StreamSelectors, IdSelectors, FieldSelectors,
+  LinearNetworkService
+} from './linear-network.service';
 
 
 export type SeparationFn = (node1: Node, node2: Node) => number;
@@ -21,11 +27,11 @@ export type Size = number | SizeFn;
 
 
 function defaultSeparation(): number {
-  return 10; // FIXME
+  return 10;
 }
 
 function defaultSize(weight: number): number {
-  return weight * 40 * 40; // FIXME
+  return weight * 40 * 40;
 }
 
 function wrapSeparationValue(value: number): SeparationFn {
@@ -39,61 +45,76 @@ function wrapSizeValue(value: number): SizeFn {
 
 @Injectable()
 export class LinearNetworkLayoutService {
-  private overflow = false;
   private maxWidth = 0;
+  private maxHeight = 0;
+  private overflow = false;
   private separation: SeparationFn = defaultSeparation;
   private size: SizeFn = defaultSize;
 
   private currentNodes: Node[] = [];
+  private currentEdges: Edge[] = [];
   readonly nodes = new Subject<LayoutNode[]>();
+  readonly edges = new Subject<LayoutEdge[]>();
   readonly width = new Subject<number>();
 
   constructor(private service: LinearNetworkService) {
     this.service.sortedNodes.subscribe((nodes) => {
-      const {nodes: lnodes, width} = this.calculateLayout(nodes);
+      const {nodes: lnodes, width} = this.calculateNodeLayout(nodes);
 
       this.currentNodes = nodes;
       this.nodes.next(lnodes);
       this.width.next(width);
     });
+    this.service.sortedEdges.combineLatest(this.nodes).subscribe(([edges, nodes]) => {
+      const {edges: ledges} = this.calculateEdgeLayout(nodes, edges);
+
+      this.currentEdges = edges;
+      this.edges.next(ledges);
+    });
   }
 
   initFields(
-    streamMap: Record<'node', Observable<RawChangeSet>>,
-    idMap: Record<'node', BoundField<DatumId>>,
-    fieldMap: Record<'weight' | 'order', BoundField<any>>
+    streamMap: Record<StreamSelectors, Observable<RawChangeSet>>,
+    idMap: Record<IdSelectors, BoundField<DatumId>>,
+    fieldMap: Record<FieldSelectors, BoundField<any>>
   ): void {
     this.service.init(streamMap, idMap, fieldMap);
   }
 
   updateFields(
     changes: SimpleChanges,
-    streamMap: Record<'node', Observable<RawChangeSet>>,
-    idMap: Record<'node', BoundField<DatumId>>,
-    fieldMap: Record<'weight' | 'order', BoundField<any>>
+    streamMap: Record<StreamSelectors, Observable<RawChangeSet>>,
+    idMap: Record<IdSelectors, BoundField<DatumId>>,
+    fieldMap: Record<FieldSelectors, BoundField<any>>
   ): void {
     this.service.update(changes, streamMap, idMap, fieldMap);
   }
 
   updateLayout(
+    maxWidth: number,
+    maxHeight: number,
     overflow: boolean = false,
-    maxWidth: number = 0,
     separation: Separation = defaultSeparation,
     size: Size = defaultSize
   ): void {
-    this.overflow = overflow;
     this.maxWidth = maxWidth;
+    this.maxHeight = maxHeight;
+    this.overflow = overflow;
     this.separation = isFunction(separation) ?
       separation : wrapSeparationValue(separation);
     this.size = isFunction(size) ? size : wrapSizeValue(size);
 
-    const {nodes, width} = this.calculateLayout(this.currentNodes);
+    const {nodes, width} = this.calculateNodeLayout(this.currentNodes);
+    const {edges} = this.calculateEdgeLayout(nodes, this.currentEdges);
     this.nodes.next(nodes);
+    this.edges.next(edges);
     this.width.next(width);
   }
 
 
-  private calculateLayout(nodes: Node[]): {nodes: LayoutNode[], width: number} {
+  private calculateNodeLayout(
+    nodes: Node[]
+  ): {nodes: LayoutNode[], width: number} {
     const lnodes = nodes.map((node) => {
       const {[idSymbol]: id} = node;
       const lnode = new Datum(id, node) as LayoutNode;
@@ -135,5 +156,38 @@ export class LinearNetworkLayoutService {
     }
 
     return {nodes: lnodes, width: this.overflow ? width : this.maxWidth};
+  }
+
+  private calculateEdgeLayout(
+    nodes: LayoutNode[], edges: Edge[]
+  ): {edges: LayoutEdge[]} {
+    const nodeMap = Map<DatumId, LayoutNode>(nodes.map((node) => {
+      return [node[idSymbol], node];
+    }));
+
+    const ledges = edges.map((edge) => {
+      const {[idSymbol]: id} = edge;
+      const ledge = new Datum(id, edge) as LayoutEdge;
+      assign(ledge, edge);
+      return ledge;
+    });
+
+    ledges.forEach((ledge) => {
+      ledge.sourceNode = nodeMap.get(ledge.source);
+      ledge.targetNode = nodeMap.get(ledge.target);
+    });
+
+    // Calculate path
+    // FIXME handle paths going from target to source
+    ledges.forEach((ledge) => {
+      const diff = ledge.targetNode.x - ledge.sourceNode.x;
+      const radius = diff / 2;
+      const moveCmd = `M${ledge.sourceNode.x} ${this.maxHeight / 2}`;
+      const arcCmd = `A${radius} ${radius} 0 0 1 ${ledge.targetNode.x} ${this.maxHeight / 2}`;
+
+      ledge.path = moveCmd + arcCmd;
+    });
+
+    return {edges: ledges};
   }
 }

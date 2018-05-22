@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Map } from 'immutable';
-import { pick } from 'lodash';
+import { pickBy, mapKeys } from 'lodash';
 
 import {
   BoundField,
@@ -14,10 +14,17 @@ import {
   DataProcessor, DataProcessorService
 } from '@ngx-dino/core';
 import { Node } from './node';
+import { Edge } from './edge';
 
 
-const calculatedNodeFieldMap = {
-};
+export type StreamSelectors = 'node' | 'edge';
+export type IdSelectors = 'node' | 'edge';
+export type FieldSelectors =
+  'nodeOrder' | 'nodeWeight' | 'nodeLabel' | 'nodeColor' | 'nodeModuleName' |
+  'nodeTimeSpent';
+
+const calculatedNodeFieldMap = {};
+const calculatedEdgeFieldMap = {};
 
 
 function inputChanged(
@@ -38,8 +45,24 @@ function inputChanged(
   return result;
 }
 
+function extractFields<K1 extends string, K2 extends string = ''>(
+  fields: Record<K2, BoundField<any>>, prefix: string
+): Record<K1, BoundField<any>> {
+  const prefixLength = prefix.length;
+  const pickedFields = pickBy(fields, (_, key) => key.startsWith(prefix));
+  return mapKeys(pickedFields, (_, key) => {
+    const nonPrefixed = key.slice(prefixLength);
+    const first = nonPrefixed[0].toLowerCase();
+    return first + nonPrefixed.slice(1);
+  }) as any;
+}
+
 function nodeSorter(node1: Node, node2: Node): number {
   return node1.order - node2.order;
+}
+
+function edgeSorter(edge1: Edge, edge2: Edge): number {
+  return edge1.order - edge2.order;
 }
 
 
@@ -49,27 +72,37 @@ export class LinearNetworkService {
   private nodeSubscription: Subscription;
   readonly sortedNodes = new Subject<Node[]>();
 
+  private edgeProcessor: DataProcessor<any, Edge>;
+  private edgeSubscription: Subscription;
+  readonly sortedEdges = new Subject<Edge[]>();
+
 
   constructor(private service: DataProcessorService) {  }
 
 
   init(
-    streamMap: Record<'node', Observable<RawChangeSet>>,
-    idMap: Record<'node', BoundField<DatumId>>,
-    fieldMap: Record<'weight' | 'order', BoundField<any>>
+    streamMap: Record<StreamSelectors, Observable<RawChangeSet>>,
+    idMap: Record<IdSelectors, BoundField<DatumId>>,
+    fieldMap: Record<FieldSelectors, BoundField<any>>
   ): void {
     this.updateNodes(
       true, true,
       streamMap.node, idMap.node,
-      pick(fieldMap, ['weight', 'order'])
+      extractFields(fieldMap, 'node')
+    );
+
+    this.updateEdges(
+      true, true,
+      streamMap.edge, idMap.edge,
+      extractFields(fieldMap, 'edge')
     );
   }
 
   update(
     changes: SimpleChanges,
-    streamMap: Record<'node', Observable<RawChangeSet>>,
-    idMap: Record<'node', BoundField<DatumId>>,
-    fieldMap: Record<'weight' | 'order', BoundField<any>>
+    streamMap: Record<StreamSelectors, Observable<RawChangeSet>>,
+    idMap: Record<IdSelectors, BoundField<DatumId>>,
+    fieldMap: Record<FieldSelectors, BoundField<any>>
   ): void {
     const [streamChanged, fieldChanged] = inputChanged(
       changes, 'Stream', 'Field'
@@ -78,7 +111,13 @@ export class LinearNetworkService {
     this.updateNodes(
       streamChanged, fieldChanged,
       streamMap.node, idMap.node,
-      pick(fieldMap, ['weight', 'order'])
+      extractFields(fieldMap, 'node')
+    );
+
+    this.updateEdges(
+      streamChanged, fieldChanged,
+      streamMap.edge, idMap.edge,
+      extractFields(fieldMap, 'edge')
     );
   }
 
@@ -87,7 +126,7 @@ export class LinearNetworkService {
     fieldChanged: boolean,
     stream: Observable<RawChangeSet>,
     idField: BoundField<DatumId>,
-    fieldMap: Record<'weight' | 'order', BoundField<any>>
+    fieldMap: Record<any, BoundField<any>>
   ): void {
     if (streamChanged) {
       if (this.nodeSubscription) {
@@ -106,9 +145,39 @@ export class LinearNetworkService {
     }
   }
 
+  private updateEdges(
+    streamChanged: boolean,
+    fieldChanged: boolean,
+    stream: Observable<RawChangeSet>,
+    idField: BoundField<DatumId>,
+    fieldMap: Record<any, BoundField<any>>
+  ): void {
+    if (streamChanged) {
+      if (this.edgeSubscription) {
+        this.edgeSubscription.unsubscribe();
+      }
+
+      this.edgeProcessor = this.service.createProcessor(
+        stream, idField, fieldMap, calculatedEdgeFieldMap
+      );
+      this.edgeSubscription = this.edgeProcessor.asObservable()
+        .subscribe(this.processEdges.bind(this));
+    } else if (fieldChanged) {
+      this.edgeProcessor.updateFields(
+        Map(fieldMap), Map(calculatedEdgeFieldMap)
+      );
+    }
+  }
+
   private processNodes(changes: ChangeSet<Node>): void {
     const sortedNodes = this.nodeProcessor.processedCache.cache.items
       .valueSeq().sort(nodeSorter).toArray() as Node[];
     this.sortedNodes.next(sortedNodes);
+  }
+
+  private processEdges(changes: ChangeSet<Edge>): void {
+    const sortedEdges = this.edgeProcessor.processedCache.cache.items
+      .valueSeq().sort(edgeSorter).toArray() as Edge[];
+    this.sortedEdges.next(sortedEdges);
   }
 }

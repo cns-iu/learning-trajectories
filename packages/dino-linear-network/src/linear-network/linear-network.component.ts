@@ -11,7 +11,8 @@ import {
   DatumId, idSymbol,
   RawChangeSet
 } from '@ngx-dino/core';
-import { Node, LayoutNode } from '../shared/node';
+import { LayoutNode } from '../shared/node';
+import { LayoutEdge } from '../shared/edge';
 import {
   Separation, Size, LinearNetworkLayoutService
 } from '../shared/linear-network-layout.service';
@@ -24,6 +25,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/delay';
 import {simpleField} from '@ngx-dino/core';
 import {access} from '@ngx-dino/core/src/v2/operators/methods/extracting/access';
+import {constant} from '@ngx-dino/core/src/v2/operators/methods/generating/constant';
 
 @Component({
   selector: 'dino-linear-network',
@@ -31,15 +33,34 @@ import {access} from '@ngx-dino/core/src/v2/operators/methods/extracting/access'
   styleUrls: ['./linear-network.component.sass'],
 })
 export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
-  // Data input
+  // Node data input
   // TODO Remove testing stuff (temp data and fields) later
   @Input() nodeStream: Observable<RawChangeSet> = Observable.of(RawChangeSet.fromArray(Array(40).fill(0).map((_, index) => {
       return {id: index, order: index, weight: 1};
   })));
 
-  @Input() idField: BoundField<DatumId> = simpleField<DatumId>({label: '', operator: access('id')}).getBoundField();
-  @Input() weightField: BoundField<number> = simpleField<number>({label: '', operator: access('weight')}).getBoundField();
-  @Input() orderField: BoundField<number> = simpleField<number>({label: '', operator: access('order')}).getBoundField();
+  @Input() nodeIdField: BoundField<DatumId> = simpleField<DatumId>({label: '', operator: access('id')}).getBoundField();
+  @Input() nodeOrderField: BoundField<number> = simpleField<number>({label: '', operator: access('order')}).getBoundField();
+  @Input() nodeWeightField: BoundField<number> = simpleField<number>({label: '', operator: access('weight')}).getBoundField();
+  @Input() nodeLabelField: BoundField<string> = simpleField({label: '', operator: constant('')}).getBoundField();
+  @Input() nodeColorField: BoundField<string> = simpleField({label: '', operator: constant('purple')}).getBoundField();
+  @Input() nodeModuleNameField: BoundField<string> = simpleField({label: '', operator: constant('')}).getBoundField();
+  @Input() nodeTimeSpentField: BoundField<String> = simpleField({label: '', operator: constant('')}).getBoundField();
+
+
+  // Edge data input
+  // TODO Remove testing stuff (temp data and fields) later
+  @Input() edgeStream: Observable<RawChangeSet> = Observable.of(RawChangeSet.fromArray(Array(10).fill(0).map((_, index) => {
+    return {id: index, order: index, source: index, target: index + 1};
+  })));
+
+  @Input() edgeIdField: BoundField<DatumId> = simpleField<DatumId>({label: '', operator: access('id')}).getBoundField();
+  @Input() edgeOrderField: BoundField<number> = simpleField<number>({label: '', operator: access('order')}).getBoundField();
+  @Input() edgeSourceField: BoundField<DatumId> = simpleField<DatumId>({label: '', operator: access('source')}).getBoundField();
+  @Input() edgeTargetField: BoundField<DatumId> = simpleField<DatumId>({label: '', operator: access('target')}).getBoundField();
+  @Input() edgeSourceModuleNameField: BoundField<string> = simpleField({label: '', operator: constant('')}).getBoundField();
+  @Input() edgeTargetModuleNameField: BoundField<string> = simpleField({label: '', operator: constant('')}).getBoundField();
+
 
   // Layout configuration
   @Input() overflow: boolean;
@@ -55,10 +76,12 @@ export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
 
   // Data
   nodes: LayoutNode[];
+  edges: LayoutEdge[];
 
 
   constructor(private service: LinearNetworkLayoutService) {
     service.nodes.subscribe((nodes) => (this.nodes = nodes));
+    service.edges.subscribe((edges) => (this.edges = edges));
     service.width.subscribe((width) => (this.width = width));
   }
 
@@ -100,39 +123,57 @@ export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
 
     // Update layout
     if (update) {
-      this.updateLayout(width);
+      this.updateLayout(width, height);
     }
   }
 
 
-  trackByNodes(index: number, node: Node): DatumId {
+  trackByNodes(index: number, node: LayoutNode): DatumId {
     return node[idSymbol];
+  }
+
+  trackByEdge(index: number, edge: LayoutEdge): DatumId {
+    return edge[idSymbol];
   }
 
 
   private getStreamMap() /* : Record<...> */ {
     return {
-      node: this.nodeStream
+      node: this.nodeStream,
+      edge: this.edgeStream
     };
   }
 
   private getIdMap() /* : Record<...> */ {
     return {
-      node: this.idField
+      node: this.nodeIdField,
+      edge: this.edgeIdField
     };
   }
 
   private getFieldMap() /* : Record<...> */ {
     return {
-      weight: this.weightField,
-      order: this.orderField
+      nodeOrder: this.nodeOrderField,
+      nodeWeight: this.nodeWeightField,
+      nodeLabel: this.nodeLabelField,
+      nodeColor: this.nodeColorField,
+      nodeModuleName: this.nodeModuleNameField,
+      nodeTimeSpent: this.nodeTimeSpentField,
+
+      edgeOrder: this.edgeOrderField,
+      edgeSource: this.edgeSourceField,
+      edgeTarget: this.edgeTargetField,
+      edgeSourceModuleName: this.edgeSourceModuleNameField,
+      edgeTargetModuleName: this.edgeTargetModuleNameField
     };
   }
 
   // tslint:disable:member-ordering
   private updateLayout = throttle(function (
-    this: LinearNetworkComponent, width: number
+    this: LinearNetworkComponent, width: number, height
   ): void {
-    this.service.updateLayout(this.overflow, width, this.separation, this.size);
+    this.service.updateLayout(
+      width, height, this.overflow, this.separation, this.size
+    );
   }, 100);
 }
