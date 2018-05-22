@@ -2,9 +2,13 @@ import { Datum } from '@ngx-dino/core';
 
 
 export interface NodeData {
-  weight: number;
   order: number;
-  // TODO
+  weight: number;
+
+  label: string;
+  color: string;
+  moduleName: string;
+  timeSpent: string;
 }
 
 export interface NodeLayoutData {
