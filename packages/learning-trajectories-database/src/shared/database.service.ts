@@ -15,7 +15,7 @@ export class DatabaseService {
     if (filter.personName && database.linearNetworks.has(filter.personName)) {
       return Observable.of(database.linearNetworks.get(filter.personName).nodes);
     } else {
-      return Observable.of([]);
+      return Observable.of(database.linearNetworks.get(database.linearNetworks.keySeq().first()).nodes);
     }
   }
 
@@ -23,7 +23,7 @@ export class DatabaseService {
     if (filter.personName && database.linearNetworks.has(filter.personName)) {
       return Observable.of(database.linearNetworks.get(filter.personName).edges);
     } else {
-      return Observable.of([]);
+      return Observable.of(database.linearNetworks.get(database.linearNetworks.keySeq().first()).edges);
     }
   }
 
@@ -31,7 +31,7 @@ export class DatabaseService {
     if (filter.personName && database.linearNetworks.has(filter.personName)) {
       return database.linearNetworks.get(filter.personName).rawPersonName;
     } else {
-      return '';
+      return database.linearNetworks.get(database.linearNetworks.keySeq().first()).rawPersonName;
     }
   }
 
