@@ -7,6 +7,9 @@ import { DinoLegendModule } from '@ngx-dino/legend';
 import { VisualizationWrapperComponent } from './visualization-wrapper/visualization-wrapper.component';
 import { VisualizationLegendsComponent } from './visualization-legends/visualization-legends.component';
 
+import { VisualizationDataService } from './shared/visualization-data.service';
+import { DatabaseService } from 'learning-trajectories-database';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -17,6 +20,10 @@ import { VisualizationLegendsComponent } from './visualization-legends/visualiza
   exports: [
     VisualizationWrapperComponent,
     VisualizationLegendsComponent
+  ],
+  providers:[
+    VisualizationDataService,
+    DatabaseService
   ],
   declarations: [VisualizationWrapperComponent, VisualizationLegendsComponent]
 })

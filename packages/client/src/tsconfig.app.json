@@ -18,6 +18,7 @@
   "include" : [
     "**/*.ts",
     "../../dino-linear-network/**/*.ts",
+    "../../learning-trajectories-database/**/*.ts",
     "../../../ngx-dino/packages/dino-*/**/*.ts"
   ]
 }

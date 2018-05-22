@@ -7,6 +7,7 @@ import {
 
   Input
 } from '@angular/core';
+import { VisualizationDataService } from '../shared/visualization-data.service';
 
 @Component({
   selector: 'app-visualization-wrapper',
@@ -16,7 +17,7 @@ import {
 export class VisualizationWrapperComponent implements OnInit, OnChanges {
   @Input() selectedControl: string;
 
-  constructor() { }
+  constructor(private dataService: VisualizationDataService) { }
 
   ngOnInit() {
   }
