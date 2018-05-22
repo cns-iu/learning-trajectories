@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
+
 import { Observable } from 'rxjs/Observable';
 
 import { Filter } from './filter';
-
 import { CourseModule, Transition } from './trajectory'; 
-
 import { database } from './database';
 
 @Injectable()
@@ -12,19 +11,19 @@ export class DatabaseService {
 
   constructor() { }
 
-  getNodes(filter: Partial<Filter> = {}): CourseModule[] {
+  getNodes(filter: Partial<Filter> = {}): Observable<CourseModule[]> {
     if (filter.personName && database.linearNetworks.has(filter.personName)) {
-      return database.linearNetworks.get(filter.personName).nodes;
+      return Observable.of(database.linearNetworks.get(filter.personName).nodes);
     } else {
-      return [];
+      return Observable.of([]);
     }
   }
 
-  getEdges(filter: Partial<Filter> = {}): Transition[] {
+  getEdges(filter: Partial<Filter> = {}): Observable<Transition[]> {
     if (filter.personName && database.linearNetworks.has(filter.personName)) {
-      return database.linearNetworks.get(filter.personName).edges;
+      return Observable.of(database.linearNetworks.get(filter.personName).edges);
     } else {
-      return [];
+      return Observable.of([]);
     }
   }
 
