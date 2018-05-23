@@ -107,10 +107,12 @@ export class LinearNetworkLayoutService {
       this.width.next(width);
     });
     this.service.sortedEdges.combineLatest(this.nodes).subscribe(([edges, nodes]) => {
-      const {edges: ledges} = this.calculateEdgeLayout(nodes, edges);
+      try {
+        const {edges: ledges} = this.calculateEdgeLayout(nodes, edges);
 
-      this.currentEdges = edges;
-      this.edges.next(ledges);
+        this.currentEdges = edges;
+        this.edges.next(ledges);
+      } catch (e) {}
     });
   }
 
