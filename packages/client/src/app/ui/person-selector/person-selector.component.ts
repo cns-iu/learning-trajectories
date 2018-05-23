@@ -15,7 +15,7 @@ export class PersonSelectorComponent implements OnInit {
 
   constructor(private dataService: PersonSelectorDataService) { 
     this.persons = this.dataService.persons;
-    this.selected = this.persons[0].value;
+    this.selected = this.persons[1].value;
   }
 
   ngOnInit() {
