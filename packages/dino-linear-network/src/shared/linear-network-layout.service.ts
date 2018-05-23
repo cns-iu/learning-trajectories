@@ -4,8 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/combineLatest';
 
-import { Map } from 'immutable';
-import { isFunction, assign } from 'lodash';
+import { List, Map } from 'immutable';
+import { isArray, isFunction, isString, assign } from 'lodash';
 
 import {
   BoundField,
@@ -24,6 +24,11 @@ export type SeparationFn = (node1: Node, node2: Node) => number;
 export type Separation = number | SeparationFn;
 export type SizeFn = (weight: number, node: Node) => number;
 export type Size = number | SizeFn;
+export type EdgeHeightFn = (
+  height: number, edge: Edge, overlapIndex: number, overlapCount: number,
+  maxHeight: number
+) => number;
+export type EdgeHeight = number | string | EdgeHeightFn;
 
 
 function defaultSeparation(): number {
@@ -34,12 +39,47 @@ function defaultSize(weight: number): number {
   return weight * 40 * 40;
 }
 
+function defaultEdgeHeight(
+  height: number, _edge: Edge, order: number, count: number, max: number
+): number {
+  if (count === 1) {
+    return Math.min(height, max);
+  } else {
+    const diff = max - height;
+    const step = Math.min(diff / count, 7);
+    return height + step * order;
+  }
+}
+
+function normalizeEdgeHeight(edgeHeight: EdgeHeight): EdgeHeightFn {
+  if (isFunction(edgeHeight)) {
+    return edgeHeight;
+  } else if (isString(edgeHeight)) {
+    const percentage = Number(/^(100|[1-9]?[0-9])%$/.exec(edgeHeight)[1]);
+    return wrapEdgeHeightPercentage(percentage / 100);
+  } else {
+    return wrapEdgeHeightValue(edgeHeight);
+  }
+}
+
 function wrapSeparationValue(value: number): SeparationFn {
   return () => value;
 }
 
 function wrapSizeValue(value: number): SizeFn {
   return () => value;
+}
+
+function wrapEdgeHeightPercentage(percentage: number): EdgeHeightFn {
+  return (h, e, i, c, m) => {
+    return defaultEdgeHeight(h, e, i, c, percentage * m);
+  };
+}
+
+function wrapEdgeHeightValue(value: number): EdgeHeightFn {
+  return (h, e, i, c, m) => {
+    return defaultEdgeHeight(h, e, i, c, Math.min(value, m));
+  };
 }
 
 
@@ -50,6 +90,7 @@ export class LinearNetworkLayoutService {
   private overflow = false;
   private separation: SeparationFn = defaultSeparation;
   private size: SizeFn = defaultSize;
+  private edgeHeight: EdgeHeightFn = defaultEdgeHeight;
 
   private currentNodes: Node[] = [];
   private currentEdges: Edge[] = [];
@@ -95,7 +136,8 @@ export class LinearNetworkLayoutService {
     maxHeight: number,
     overflow: boolean = false,
     separation: Separation = defaultSeparation,
-    size: Size = defaultSize
+    size: Size = defaultSize,
+    edgeHeight: EdgeHeight = defaultEdgeHeight
   ): void {
     this.maxWidth = maxWidth;
     this.maxHeight = maxHeight;
@@ -103,6 +145,7 @@ export class LinearNetworkLayoutService {
     this.separation = isFunction(separation) ?
       separation : wrapSeparationValue(separation);
     this.size = isFunction(size) ? size : wrapSizeValue(size);
+    this.edgeHeight = normalizeEdgeHeight(edgeHeight);
 
     const {nodes, width} = this.calculateNodeLayout(this.currentNodes);
     const {edges} = this.calculateEdgeLayout(nodes, this.currentEdges);
@@ -122,12 +165,14 @@ export class LinearNetworkLayoutService {
       return lnode;
     });
 
+
     // Calculate size
     lnodes.forEach((lnode) => {
       const {weight, [rawDataSymbol]: node} = lnode;
       const size = this.size(weight, node);
       lnode.radius = Math.sqrt(size) / 2;
     });
+
 
     // Calculate position
     lnodes.forEach((lnode, index, array) => {
@@ -142,9 +187,11 @@ export class LinearNetworkLayoutService {
       }
     });
 
+
     // Calculate width
     const lastNode = lnodes[lnodes.length - 1] || {x: 0, radius: 0};
     const width = lastNode.x + lastNode.radius;
+
 
     // Scale if not overflow
     if (!this.overflow && this.maxWidth > 0 && width > this.maxWidth) {
@@ -172,18 +219,62 @@ export class LinearNetworkLayoutService {
       return ledge;
     });
 
+
+    // Lookup nodes
     ledges.forEach((ledge) => {
       ledge.sourceNode = nodeMap.get(ledge.source);
       ledge.targetNode = nodeMap.get(ledge.target);
     });
 
-    // Calculate path
-    // FIXME handle paths going from target to source
+
+    // Calculate path coordinates
     ledges.forEach((ledge) => {
       const diff = ledge.targetNode.x - ledge.sourceNode.x;
-      const radius = diff / 2;
-      const moveCmd = `M${ledge.sourceNode.x} ${this.maxHeight / 2}`;
-      const arcCmd = `A${radius} ${radius} 0 0 1 ${ledge.targetNode.x} ${this.maxHeight / 2}`;
+      const diffAbs = Math.abs(diff);
+      const radius = diffAbs / 2;
+
+      ledge.fromX = ledge.sourceNode.x;
+      ledge.toX = ledge.targetNode.x;
+      ledge.fromY = ledge.toY = this.maxHeight / 2;
+      ledge.xRadius = ledge.yRadius = radius;
+      ledge.sweepFlag = 1;
+
+      if (diff < 0) {
+        ledge.fromX = ledge.targetNode.x;
+        ledge.toX = ledge.sourceNode.x;
+        ledge.sweepFlag = 0;
+      }
+      // else if (diff === 0) {
+      //   // TODO
+      // }
+    });
+
+
+    // Create mapping of overlapping edges
+    const overlappingEdgeMap = Map<List<any>, List<LayoutEdge>>(List(ledges)
+      .groupBy((ledge) => {
+        return List.of(ledge.source, ledge.target);
+      }).map((group) => group.toList()));
+
+
+    // Adjust yRadius
+    ledges.forEach((ledge) => {
+      const key = List.of(ledge.source, ledge.target);
+      const group = overlappingEdgeMap.get(key);
+      const index = group.indexOf(ledge);
+
+      ledge.yRadius = this.edgeHeight(
+        ledge.yRadius, ledge[rawDataSymbol], index, group.size,
+        this.maxHeight / 2
+      );
+    });
+
+
+    // Create path string
+    ledges.forEach((ledge) => {
+      const {fromX, toX, fromY, toY, xRadius, yRadius, sweepFlag} = ledge;
+      const moveCmd = `M${fromX},${fromY}`;
+      const arcCmd = `A${xRadius},${yRadius},0,0,${sweepFlag},${toX},${toY}`;
 
       ledge.path = moveCmd + arcCmd;
     });

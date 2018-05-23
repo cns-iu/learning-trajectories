@@ -14,18 +14,9 @@ import {
 import { LayoutNode } from '../shared/node';
 import { LayoutEdge } from '../shared/edge';
 import {
-  Separation, Size, LinearNetworkLayoutService
+  Separation, Size, EdgeHeight, LinearNetworkLayoutService
 } from '../shared/linear-network-layout.service';
 
-
-// For testing
-// TODO Remove later
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/delay';
-import {simpleField} from '@ngx-dino/core';
-import {access} from '@ngx-dino/core/src/v2/operators/methods/extracting/access';
-import {constant} from '@ngx-dino/core/src/v2/operators/methods/generating/constant';
 
 @Component({
   selector: 'dino-linear-network',
@@ -34,38 +25,31 @@ import {constant} from '@ngx-dino/core/src/v2/operators/methods/generating/const
 })
 export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
   // Node data input
-  // TODO Remove testing stuff (temp data and fields) later
-  @Input() nodeStream: Observable<RawChangeSet> = Observable.of(RawChangeSet.fromArray(Array(40).fill(0).map((_, index) => {
-      return {id: index, order: index, weight: 1};
-  })));
+  @Input() nodeStream: Observable<RawChangeSet>;
 
-  @Input() nodeIdField: BoundField<DatumId> = simpleField<DatumId>({label: '', operator: access('id')}).getBoundField();
-  @Input() nodeOrderField: BoundField<number> = simpleField<number>({label: '', operator: access('order')}).getBoundField();
-  @Input() nodeWeightField: BoundField<number> = simpleField<number>({label: '', operator: access('weight')}).getBoundField();
-  @Input() nodeLabelField: BoundField<string> = simpleField({label: '', operator: constant('')}).getBoundField();
-  @Input() nodeColorField: BoundField<string> = simpleField({label: '', operator: constant('purple')}).getBoundField();
-  @Input() nodeModuleNameField: BoundField<string> = simpleField({label: '', operator: constant('')}).getBoundField();
-  @Input() nodeTimeSpentField: BoundField<String> = simpleField({label: '', operator: constant('')}).getBoundField();
+  @Input() nodeIdField: BoundField<DatumId>;
+  @Input() nodeOrderField: BoundField<number>;
+  @Input() nodeWeightField: BoundField<number>;
+  @Input() nodeColorField: BoundField<string>;
+  @Input() nodeTooltipField: BoundField<string>;
 
 
   // Edge data input
-  // TODO Remove testing stuff (temp data and fields) later
-  @Input() edgeStream: Observable<RawChangeSet> = Observable.of(RawChangeSet.fromArray(Array(10).fill(0).map((_, index) => {
-    return {id: index, order: index, source: index, target: index + 1};
-  })));
+  @Input() edgeStream: Observable<RawChangeSet>;
 
-  @Input() edgeIdField: BoundField<DatumId> = simpleField<DatumId>({label: '', operator: access('id')}).getBoundField();
-  @Input() edgeOrderField: BoundField<number> = simpleField<number>({label: '', operator: access('order')}).getBoundField();
-  @Input() edgeSourceField: BoundField<DatumId> = simpleField<DatumId>({label: '', operator: access('source')}).getBoundField();
-  @Input() edgeTargetField: BoundField<DatumId> = simpleField<DatumId>({label: '', operator: access('target')}).getBoundField();
-  @Input() edgeSourceModuleNameField: BoundField<string> = simpleField({label: '', operator: constant('')}).getBoundField();
-  @Input() edgeTargetModuleNameField: BoundField<string> = simpleField({label: '', operator: constant('')}).getBoundField();
+  @Input() edgeIdField: BoundField<DatumId>;
+  @Input() edgeOrderField: BoundField<number>;
+  @Input() edgeWeightField: BoundField<number>;
+  @Input() edgeSourceField: BoundField<DatumId>;
+  @Input() edgeTargetField: BoundField<DatumId>;
+  @Input() edgeTooltipField: BoundField<string>;
 
 
   // Layout configuration
   @Input() overflow: boolean;
   @Input() separation: Separation;
   @Input() size: Size;
+  @Input() edgeHeight: EdgeHeight;
 
 
   // Elements
@@ -155,16 +139,14 @@ export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
     return {
       nodeOrder: this.nodeOrderField,
       nodeWeight: this.nodeWeightField,
-      nodeLabel: this.nodeLabelField,
       nodeColor: this.nodeColorField,
-      nodeModuleName: this.nodeModuleNameField,
-      nodeTimeSpent: this.nodeTimeSpentField,
+      nodeTooltip: this.nodeTooltipField,
 
       edgeOrder: this.edgeOrderField,
+      edgeWeight: this.edgeWeightField,
       edgeSource: this.edgeSourceField,
       edgeTarget: this.edgeTargetField,
-      edgeSourceModuleName: this.edgeSourceModuleNameField,
-      edgeTargetModuleName: this.edgeTargetModuleNameField
+      edgeTooltip: this.edgeTooltipField
     };
   }
 
@@ -173,7 +155,8 @@ export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
     this: LinearNetworkComponent, width: number, height
   ): void {
     this.service.updateLayout(
-      width, height, this.overflow, this.separation, this.size
+      width, height, this.overflow, this.separation, this.size,
+      this.edgeHeight
     );
   }, 100);
 }

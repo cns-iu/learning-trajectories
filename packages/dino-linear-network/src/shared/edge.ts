@@ -4,6 +4,7 @@ import { LayoutNode } from './node';
 
 export interface EdgeData {
   order: number;
+  weight: number;
   source: DatumId;
   target: DatumId;
 
@@ -14,6 +15,15 @@ export interface EdgeData {
 export interface EdgeLayoutData {
   sourceNode: LayoutNode;
   targetNode: LayoutNode;
+
+  fromX: number;
+  fromY: number;
+  toX: number;
+  toY: number;
+  xRadius: number;
+  yRadius: number;
+  sweepFlag: 0 | 1;
+
   path: string;
 }
 

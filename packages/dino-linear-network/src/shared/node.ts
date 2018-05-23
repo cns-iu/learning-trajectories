@@ -5,10 +5,8 @@ export interface NodeData {
   order: number;
   weight: number;
 
-  label: string;
   color: string;
-  moduleName: string;
-  timeSpent: string;
+  tooltip: string;
 }
 
 export interface NodeLayoutData {

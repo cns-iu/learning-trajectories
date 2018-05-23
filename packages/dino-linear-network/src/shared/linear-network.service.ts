@@ -20,8 +20,8 @@ import { Edge } from './edge';
 export type StreamSelectors = 'node' | 'edge';
 export type IdSelectors = 'node' | 'edge';
 export type FieldSelectors =
-  'nodeOrder' | 'nodeWeight' | 'nodeLabel' | 'nodeColor' | 'nodeModuleName' |
-  'nodeTimeSpent';
+  'nodeOrder' | 'nodeWeight' | 'nodeColor' | 'nodeTooltip' |
+  'edgeOrder' | 'edgeWeight' | 'edgeSource' | 'edgeTarget' | 'edgeTooltip';
 
 const calculatedNodeFieldMap = {};
 const calculatedEdgeFieldMap = {};
