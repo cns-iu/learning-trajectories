@@ -61,5 +61,5 @@ export const edgeTargetField = simpleField({
 
 export const edgeTooltipField = simpleField({
   label: 'Edge Tooltip',
-  operator: map(() => 'FIXME')
+  operator: map(() => 'FIXME') // FIXME
 });

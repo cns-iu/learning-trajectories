@@ -24,6 +24,8 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
   edgeStream: Observable<RawChangeSet>;
   fields: {[key: string]: BoundField<any>};
 
+  overflow = true;
+
   constructor(private service: VisualizationDataService) {
     this.nodeStream = service.getNodes();
     this.edgeStream = service.getEdges();
