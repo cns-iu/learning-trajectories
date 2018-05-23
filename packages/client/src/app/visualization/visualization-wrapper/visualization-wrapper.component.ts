@@ -29,7 +29,8 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
     this.edgeStream = service.getEdges();
 
     const combinedFields = assign({}, fields, pick(service, [
-      'nodeWeightField', 'nodeColorField', 'edgeWeightField'
+      'nodeWeightField', 'nodeColorField',
+      'edgeWeightField', 'edgeColorField'
     ]));
     this.fields = mapValues(combinedFields, (f) => f.getBoundField());
   }

@@ -1,7 +1,7 @@
 import {
   Component, Input, ViewChild,
   OnInit, OnChanges, DoCheck,
-  SimpleChanges, ElementRef
+  SimpleChanges, ElementRef, ViewEncapsulation
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { throttle } from 'lodash';
@@ -22,6 +22,7 @@ import {
   selector: 'dino-linear-network',
   templateUrl: './linear-network.component.html',
   styleUrls: ['./linear-network.component.sass'],
+  encapsulation: ViewEncapsulation.None
 })
 export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
   // Node data input
@@ -42,6 +43,7 @@ export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
   @Input() edgeWeightField: BoundField<number>;
   @Input() edgeSourceField: BoundField<DatumId>;
   @Input() edgeTargetField: BoundField<DatumId>;
+  @Input() edgeColorField: BoundField<string>;
   @Input() edgeTooltipField: BoundField<string>;
 
 
@@ -146,6 +148,7 @@ export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
       edgeWeight: this.edgeWeightField,
       edgeSource: this.edgeSourceField,
       edgeTarget: this.edgeTargetField,
+      edgeColor: this.edgeColorField,
       edgeTooltip: this.edgeTooltipField
     };
   }

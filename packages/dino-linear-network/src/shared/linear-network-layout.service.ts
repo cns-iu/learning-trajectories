@@ -40,14 +40,18 @@ function defaultSize(weight: number): number {
 }
 
 function defaultEdgeHeight(
-  height: number, _edge: Edge, order: number, count: number, max: number
+  height: number, _edge: Edge, index: number, count: number, max: number
 ): number {
   if (count === 1) {
     return Math.min(height, max);
   } else {
     const diff = max - height;
     const step = Math.min(diff / count, 7);
-    return height + step * order;
+    if (diff < 0) {
+      index = count - index;
+    }
+
+    return height + step * index;
   }
 }
 

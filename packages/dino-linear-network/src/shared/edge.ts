@@ -10,6 +10,9 @@ export interface EdgeData {
 
   sourceModuleName: string;
   targetModuleName: string;
+
+  color: string;
+  tooltip: string;
 }
 
 export interface EdgeLayoutData {

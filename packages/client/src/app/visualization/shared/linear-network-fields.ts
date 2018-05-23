@@ -25,7 +25,11 @@ export const nodeTooltipField = simpleField({
     moduleName: access('description'),
     time: access('totalTime')
   }), map(({label, moduleName, time}) => {
-    return 'FIXME';
+    const smodule = `Module: ${moduleName}`;
+    const slabel = `Label: ${label}`;
+    const stime = `Time Spent: ${time} minutes`;
+    const parts = (moduleName ? [smodule] : []).concat([slabel, stime]);
+    return parts.join('\n');
   }))
 });
 
