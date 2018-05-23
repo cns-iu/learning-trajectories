@@ -10,6 +10,12 @@ import { map } from '@ngx-dino/core/src/v2/operators/methods/transforming/map';
 
 import { Filter, DatabaseService } from 'learning-trajectories-database';
 
+
+function assignColors(ids: object): object {
+  return ids; // FIXME
+}
+
+
 @Injectable()
 export class VisualizationDataService {
   private nodeStatistics = {
@@ -29,13 +35,22 @@ export class VisualizationDataService {
 
   readonly nodeColorField = simpleField({
     label: 'nodeColor',
-    operator: map(() => 'purple') // FIXME
+    operator: chain(access<string>('level1Id'), map((id) => {
+      return this.nodeStatistics.level1Ids[id];
+    }))
   });
 
   readonly edgeWeightField = simpleField({
     label: 'Edge Weight',
     operator: chain(access<number>('distance'), map((d) => {
-      return d / this.edgeStatistics.maxDistance * .75 + .25;
+      return Math.abs(d) / this.edgeStatistics.maxDistance * .75 + .25;
+    }))
+  });
+
+  readonly edgeColorField = simpleField({
+    label: 'Edge Color',
+    operator: chain(access<string>('direction'), map((d) => {
+      return d.toLowerCase() === 'p' ? 'lightblue' : 'purple';
     }))
   });
 
@@ -52,7 +67,7 @@ export class VisualizationDataService {
       });
 
       this.nodeStatistics.maxNumEvents = maxNumEvents;
-      this.nodeStatistics.level1Ids = level1Ids;
+      this.nodeStatistics.level1Ids = assignColors(level1Ids);
     }).map(RawChangeSet.fromArray);
   }
 
@@ -60,7 +75,7 @@ export class VisualizationDataService {
     return this.database.getEdges(filter).do((edges) => {
       let maxDistance = 0;
       edges.forEach((edge) => {
-        maxDistance = Math.max(edge.distance, maxDistance);
+        maxDistance = Math.max(Math.abs(edge.distance), maxDistance);
       });
 
       this.edgeStatistics.maxDistance = maxDistance;

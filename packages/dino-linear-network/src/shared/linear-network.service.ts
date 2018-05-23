@@ -21,7 +21,8 @@ export type StreamSelectors = 'node' | 'edge';
 export type IdSelectors = 'node' | 'edge';
 export type FieldSelectors =
   'nodeOrder' | 'nodeWeight' | 'nodeColor' | 'nodeTooltip' |
-  'edgeOrder' | 'edgeWeight' | 'edgeSource' | 'edgeTarget' | 'edgeTooltip';
+  'edgeOrder' | 'edgeWeight' | 'edgeSource' | 'edgeTarget' |
+  'edgeColor' | 'edgeTooltip';
 
 const calculatedNodeFieldMap = {};
 const calculatedEdgeFieldMap = {};

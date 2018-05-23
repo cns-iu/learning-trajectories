@@ -26,13 +26,16 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
 
   fields: {[key: string]: BoundField<any>};
 
+  overflow = true;
+
   constructor(private service: VisualizationDataService) {
     this.nodeStream = service.getNodes();
     this.edgeStream = service.getEdges();
     this.courseTitle = service.getTitle();
 
     const combinedFields = assign({}, fields, pick(service, [
-      'nodeWeightField', 'nodeColorField', 'edgeWeightField'
+      'nodeWeightField', 'nodeColorField',
+      'edgeWeightField', 'edgeColorField'
     ]));
     this.fields = mapValues(combinedFields, (f) => f.getBoundField());
   }
