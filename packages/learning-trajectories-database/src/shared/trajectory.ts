@@ -38,7 +38,7 @@ export interface Transition {
   targetSessionId: string; // [target] edx session id
   targetTemporalSessionId: number; // [target] calculated temporal session (his 25th session)
 
-  dir: string; // ?? (TBD)
+  direction: string; // direction - 'p': forward, 'n': backward
   distance: number; // distance. difference between temporal sequence position - source position. + is forward, - is backward
   timestamp: string; // EST or UTC source time that the event happened (probably when they landed on target module)
   userId: number; // user for the edge

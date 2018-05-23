@@ -57,7 +57,7 @@ export class LinearNetwork {
       targetSessionId: edge['t.session'],
       targetTemporalSessionId: edge['t.tsession'],
 
-      dir: edge.dir, // TODO name
+      direction: edge.dir,
 
       distance: edge.dis,
       timestamp: edge.time,
