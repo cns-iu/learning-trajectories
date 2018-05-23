@@ -17,7 +17,6 @@ export class LearnerTrajectoriesDatabase {
     for(let i = 1; i<= numRawPersons; i++) {
       const personName = 'person' + i;
       const rawPerson = require('../../../../raw-data/'+personName+'.json');
-      console.log(typeof rawPerson.vertices[0].courseID)
       if (!(personName in rawNetworks)) {
         //TODO get Course ID in a better way
         rawNetworks[personName] = Map().set(rawPerson.vertices[0].courseID, new LinearNetwork(rawPerson));

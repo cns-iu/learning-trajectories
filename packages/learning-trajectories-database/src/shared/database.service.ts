@@ -50,4 +50,8 @@ export class DatabaseService {
     }
   }
 
+  getPersonNames(): Observable<string[]>{
+    return Observable.of(database.linearNetworks.keySeq().toArray());
+  }
+
 }
