@@ -8,7 +8,7 @@ export class LearnerTrajectoriesDatabase {
   readonly linearNetworks: Map<string, Map<string, LinearNetwork>>;
 
   constructor() {
-    this.linearNetworks = Map(this.makeLinearNetworks());    
+    this.linearNetworks = Map(this.makeLinearNetworks());
   }
 
   makeLinearNetworks() {

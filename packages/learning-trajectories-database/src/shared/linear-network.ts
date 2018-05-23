@@ -36,7 +36,9 @@ export class LinearNetwork {
         backwardIndegree: vertex.recurse_i ,
 
         forwardOutdegree: vertex.forward_o,
-        backwardOutdegree: vertex.backward_o
+        backwardOutdegree: vertex.backward_o,
+
+        selfLoopCount: vertex.sl
       } as CourseModule;
     
     return courseModule;
@@ -59,7 +61,9 @@ export class LinearNetwork {
 
       distance: edge.dis,
       timestamp: edge.time,
-      userId: edge.user_id
+      userId: edge.user_id,
+
+      selfLoopFlag: Boolean(edge.sl)
     } as Transition;
 
     return courseTransition;

@@ -22,6 +22,8 @@ export interface CourseModule {
   
   forwardOutdegree: number; // out-degree of forward event edges
   backwardOutdegree: number; // out-degree of backward event edges
+
+  selfLoopCount: number; // count of self-loop events
 }
 
 export interface Transition {
@@ -40,6 +42,8 @@ export interface Transition {
   distance: number; // distance. difference between temporal sequence position - source position. + is forward, - is backward
   timestamp: string; // EST or UTC source time that the event happened (probably when they landed on target module)
   userId: number; // user for the edge
+
+  selfLoopFlag: boolean; // self-loop event flag where source and target are equal
 }
 
 export interface Trajectory {
