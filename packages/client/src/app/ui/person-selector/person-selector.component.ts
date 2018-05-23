@@ -13,7 +13,7 @@ export class PersonSelectorComponent implements OnInit {
   persons: selector<string>[];
   selected: string;
 
-  constructor(private dataService: PersonSelectorDataService) { 
+  constructor(private dataService: PersonSelectorDataService) {
     this.persons = this.dataService.persons;
     this.selected = this.persons[1].value;
   }

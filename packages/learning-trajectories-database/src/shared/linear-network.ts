@@ -5,6 +5,7 @@ export class LinearNetwork {
   readonly rawPersonName: string;
   readonly nodes: CourseModule[];
   readonly edges: Transition[];
+  private moduleIdToName: Map<string, CourseModule> = new Map();
 
   constructor (rawPerson: any) {
     this.directed = rawPerson.directed[0] as string;
@@ -25,22 +26,24 @@ export class LinearNetwork {
         level1Id: vertex.L1,
         level1Label: vertex.L1label,
 
-        order: vertex.order ,
-        uniqueStudents: vertex.unq_stu ,
-        sessions: vertex.sessions ,
-        days: vertex.days ,
-        events: vertex.events ,
-        totalTime: vertex.totalTime ,
+        order: vertex.order,
+        uniqueStudents: vertex.unq_stu,
+        sessions: vertex.sessions,
+        days: vertex.days,
+        events: vertex.events,
+        totalTime: vertex.totalTime,
 
-        forwardIndegree: vertex.progress_i ,
-        backwardIndegree: vertex.recurse_i ,
+        forwardIndegree: vertex.progress_i,
+        backwardIndegree: vertex.recurse_i,
 
         forwardOutdegree: vertex.forward_o,
         backwardOutdegree: vertex.backward_o,
 
         selfLoopCount: vertex.sl
       } as CourseModule;
-    
+
+    this.moduleIdToName.set(courseModule.id, courseModule);
+
     return courseModule;
   }
 
@@ -48,6 +51,9 @@ export class LinearNetwork {
     const courseTransition = {
       source: edge.from,
       target: edge.to,
+
+      sourceModule: this.moduleIdToName.get(edge.from),
+      targetModule: this.moduleIdToName.get(edge.to),
 
       sourceOrder: edge['s.seqpos'] as number,
       sourceSessionId: edge['s.session'],

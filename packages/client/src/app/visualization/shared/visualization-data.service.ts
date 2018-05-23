@@ -66,4 +66,10 @@ export class VisualizationDataService {
       this.edgeStatistics.maxDistance = maxDistance;
     }).map(RawChangeSet.fromArray);
   }
+
+  getTitle(filter: Partial<Filter> = {}): string {
+    let title: string;
+    this.database.getCourseTitle(filter).subscribe((t) => title = t);
+    return title;
+  }
 }

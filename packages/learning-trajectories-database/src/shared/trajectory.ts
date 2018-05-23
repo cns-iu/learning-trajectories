@@ -30,6 +30,9 @@ export interface Transition {
   source: string; // from module uuid
   target: string; // to module uuid
 
+  sourceModule: CourseModule;
+  targetModule: CourseModule;
+
   sourceOrder: number; // [source] order of the module, same as module.order
   sourceSessionId: string; // [source] edx session id
   sourceTemporalSessionId: number; // [source] calculated temporal session (his 25th session)

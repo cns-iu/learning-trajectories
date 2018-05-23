@@ -22,11 +22,14 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
 
   nodeStream: Observable<RawChangeSet>;
   edgeStream: Observable<RawChangeSet>;
+  courseTitle: string;
+
   fields: {[key: string]: BoundField<any>};
 
   constructor(private service: VisualizationDataService) {
     this.nodeStream = service.getNodes();
     this.edgeStream = service.getEdges();
+    this.courseTitle = service.getTitle();
 
     const combinedFields = assign({}, fields, pick(service, [
       'nodeWeightField', 'nodeColorField', 'edgeWeightField'
@@ -47,6 +50,7 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
       const filter = {personName: changes.personSelected.currentValue};
       this.nodeStream = this.service.getNodes(filter);
       this.edgeStream = this.service.getEdges(filter);
+      this.courseTitle = this.service.getTitle(filter);
     }
   }
 }
