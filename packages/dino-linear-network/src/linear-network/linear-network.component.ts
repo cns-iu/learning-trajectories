@@ -112,7 +112,7 @@ export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
   }
 
 
-  trackByNodes(index: number, node: LayoutNode): DatumId {
+  trackByNode(index: number, node: LayoutNode): DatumId {
     return node[idSymbol];
   }
 
