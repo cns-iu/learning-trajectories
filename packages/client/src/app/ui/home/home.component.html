@@ -11,7 +11,7 @@
       (openedChange)="openState=$event">
         <p class="sidenavTitle">Filter</p>
         <hr>
-        <app-person-selector></app-person-selector>
+        <app-person-selector #selector></app-person-selector>
 
         <p class="sidenavTitle">Animation Controls</p>
         <hr>
@@ -24,7 +24,8 @@
 
     <mat-sidenav-content>
       <app-visualization-wrapper
-        [selectedControl]="controls.selectedControl">
+        [selectedControl]="controls.selectedControl"
+        [personSelected]="selector.selected">
       </app-visualization-wrapper>
     </mat-sidenav-content>
 </mat-sidenav-container>

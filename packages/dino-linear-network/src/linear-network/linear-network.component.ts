@@ -46,10 +46,10 @@ export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
 
 
   // Layout configuration
-  @Input() overflow: boolean;
+  @Input() overflow: boolean = true;
   @Input() separation: Separation;
   @Input() size: Size;
-  @Input() edgeHeight: EdgeHeight;
+  @Input() edgeHeight: EdgeHeight = '90%';
 
 
   // Elements

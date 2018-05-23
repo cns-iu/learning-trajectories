@@ -18,6 +18,7 @@ import * as fields from '../shared/linear-network-fields';
 })
 export class VisualizationWrapperComponent implements OnInit, OnChanges {
   @Input() selectedControl: string;
+  @Input() personSelected: string;
 
   nodeStream: Observable<RawChangeSet>;
   edgeStream: Observable<RawChangeSet>;
@@ -39,6 +40,13 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if ('selectedControl' in changes) {
       // TODO add actions for controlling animations on the visualization.
+      console.log('selected animation control - ', changes.selectedControl.currentValue); // TODO remove when appropriate functionality has been added
+    }
+
+    if ('personSelected' in changes) {
+      const filter = {personName: changes.personSelected.currentValue};
+      this.nodeStream = this.service.getNodes(filter);
+      this.edgeStream = this.service.getEdges(filter);
     }
   }
 }

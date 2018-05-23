@@ -1,0 +1,1 @@
+export type selector<T> = {value: T, viewValue: T};
