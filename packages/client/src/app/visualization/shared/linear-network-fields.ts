@@ -20,17 +20,11 @@ export const nodeOrderField = simpleField({
 
 export const nodeTooltipField = simpleField({
   label: 'Node Tooltip',
-  operator: chain(combine({
-    chapter: access('level1Label'),
-    page: access('level2Label'),
-    time: access('totalTime')
-  }), map(({chapter, page, time}) => {
-    const smodule = `Chapter: ${chapter}`;
-    const slabel = `Page: ${page}`;
-    const stime = `Total Time Spent: ${time} minutes`;
-    const parts = [smodule, slabel, stime];
-    return parts.join('\n');
-  }))
+  operator: chain(combine([
+    chain(access('level1Label'), map((s) => `Chapter: ${s}`)),
+    chain(access('level2Label'), map((s) => `Page: ${s}`)),
+    chain(access('totalTime'), map((s) => `Total Time Spent: ${s} minutes`))
+  ]), map((parts: string[]) => parts.join('\n')))
 });
 
 
