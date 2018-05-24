@@ -1,7 +1,7 @@
 import {
-  Component, Input, ViewChild,
-  OnInit, OnChanges, DoCheck,
-  SimpleChanges, ElementRef, ViewEncapsulation
+  Component, Input, ViewChild, ViewChildren,
+  OnInit, OnChanges, DoCheck, AfterViewInit,
+  SimpleChanges, ElementRef, QueryList, ViewEncapsulation
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { throttle } from 'lodash';
@@ -16,6 +16,7 @@ import { LayoutEdge } from '../shared/edge';
 import {
   Separation, Size, EdgeHeight, LinearNetworkLayoutService
 } from '../shared/linear-network-layout.service';
+import { EdgeAnimator } from '../shared/animation';
 
 
 @Component({
@@ -24,7 +25,7 @@ import {
   styleUrls: ['./linear-network.component.sass'],
   encapsulation: ViewEncapsulation.None
 })
-export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
+export class LinearNetworkComponent implements OnInit, AfterViewInit, OnChanges, DoCheck {
   // Node data input
   @Input() nodeStream: Observable<RawChangeSet>;
 
@@ -56,6 +57,7 @@ export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
 
   // Elements
   @ViewChild('container') svg: ElementRef;
+  @ViewChildren('edges') edgeElements: QueryList<ElementRef>;
   width = 0;
   height = 0;
 
@@ -65,9 +67,17 @@ export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
   edges: LayoutEdge[];
 
 
+  // Animation
+  @Input() animDuration = 5; // In seconds
+  private animEdgeState: EdgeAnimator;
+
+
   constructor(private service: LinearNetworkLayoutService) {
     service.nodes.subscribe((nodes) => (this.nodes = nodes));
-    service.edges.subscribe((edges) => (this.edges = edges));
+    service.edges.subscribe((edges) => {
+      this.edges = edges;
+      this.stopEdgeAnimation();
+    });
     service.width.subscribe((width) => (this.width = width));
   }
 
@@ -80,6 +90,11 @@ export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
     console.log(this); // TODO Remove me later
   }
 
+  ngAfterViewInit(): void {
+    this.animEdgeState = new EdgeAnimator(this.edgeElements);
+    this.animEdgeState.duration = this.animDuration;
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     this.service.updateFields(
       changes,
@@ -87,6 +102,10 @@ export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
       this.getIdMap(),
       this.getFieldMap()
     );
+
+    if ('animDuration' in changes && this.animEdgeState) {
+      this.animEdgeState.duration = this.animDuration;
+    }
   }
 
   ngDoCheck(): void {
@@ -120,6 +139,26 @@ export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
 
   trackByEdge(index: number, edge: LayoutEdge): DatumId {
     return edge[idSymbol];
+  }
+
+
+  // Animations
+  startEdgeAnimation(): void {
+    if (this.animEdgeState) {
+      this.animEdgeState.start();
+    }
+  }
+
+  pauseEdgeAnimation(): void {
+    if (this.animEdgeState) {
+      this.animEdgeState.pause();
+    }
+  }
+
+  stopEdgeAnimation(): void {
+    if (this.animEdgeState) {
+      this.animEdgeState.stop();
+    }
   }
 
 
