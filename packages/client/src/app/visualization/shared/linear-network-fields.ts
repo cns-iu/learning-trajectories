@@ -21,14 +21,14 @@ export const nodeOrderField = simpleField({
 export const nodeTooltipField = simpleField({
   label: 'Node Tooltip',
   operator: chain(combine({
-    label: access('level1Label'),
-    moduleName: access('description'),
+    chapter: access('level1Label'),
+    page: access('level2Label'),
     time: access('totalTime')
-  }), map(({label, moduleName, time}) => {
-    const smodule = `Module: ${moduleName}`;
-    const slabel = `Label: ${label}`;
-    const stime = `Time Spent: ${time} minutes`;
-    const parts = (moduleName ? [smodule] : []).concat([slabel, stime]);
+  }), map(({chapter, page, time}) => {
+    const smodule = `Chapter: ${chapter}`;
+    const slabel = `Page: ${page}`;
+    const stime = `Total Time Spent: ${time} minutes`;
+    const parts = [smodule, slabel, stime];
     return parts.join('\n');
   }))
 });
@@ -58,6 +58,10 @@ export const edgeTargetField = simpleField({
   label: 'Edge Target',
   operator: access('target')
 });
+// TODO:
+// ${edge.sourceModule.l2label} => (or <=)
+// ${edge.targetModule.l2label}
+// Number of Transitions: ${edge.count}
 
 export const edgeTooltipField = simpleField({
   label: 'Edge Tooltip',

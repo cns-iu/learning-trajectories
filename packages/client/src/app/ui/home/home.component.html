@@ -1,6 +1,6 @@
 <mat-toolbar class="toolbar z-depth-1-half">
   <mat-icon class="hamburger" (click)="sidenav.toggle()">menu</mat-icon>
-  <span>Learning Trajectories</span>
+  <span>Learning Trajectories: $courseTitle - $personId</span>
   <img id="cnsLogo" src="assets/cns-logo.png" title="Cyberinfrastructure for Network Science Center">
 </mat-toolbar>
 
@@ -9,8 +9,6 @@
       [opened] = "true"
       class="sidenavContainer"
       (openedChange)="openState=$event">
-        <p class="sidenavTitle">Filter</p>
-        <hr>
         <app-person-selector #selector></app-person-selector>
 
         <p class="sidenavTitle">Animation Controls</p>

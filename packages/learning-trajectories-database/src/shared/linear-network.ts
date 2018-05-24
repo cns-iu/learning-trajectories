@@ -10,7 +10,7 @@ export class LinearNetwork {
   constructor (rawPerson: any) {
     this.directed = rawPerson.directed[0] as string;
     this.rawPersonName = rawPerson.name[0] as string;
-    this.nodes =  (rawPerson.vertices || []).map((m) => this.getNode(m));
+    this.nodes =  (rawPerson.vertices || []).map((m) => this.getNode(m)).filter((m) => m.events > 0);
     this.edges = (rawPerson.edges || []).map((e) => this.getEdge(e));
   }
 
@@ -20,7 +20,7 @@ export class LinearNetwork {
         courseId: vertex.courseID,
         moduleType: vertex['module.type'],
         description: vertex.desc,
-        
+
         level2Id: vertex.L2,
         level2Label: vertex.L2label,
         level1Id: vertex.L1,
