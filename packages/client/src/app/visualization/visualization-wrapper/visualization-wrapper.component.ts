@@ -1,5 +1,5 @@
 import {
-  Component, Input,
+  Component, Input, ViewChild,
   OnInit, OnChanges,
   SimpleChanges
 } from '@angular/core';
@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import { assign, mapValues, pick } from 'lodash';
 
 import { BoundField, RawChangeSet } from '@ngx-dino/core';
+import { LinearNetworkComponent } from '@ngx-dino/linear-network';
 import { VisualizationDataService } from '../shared/visualization-data.service';
 import * as fields from '../shared/linear-network-fields';
 
@@ -19,6 +20,8 @@ import * as fields from '../shared/linear-network-fields';
 export class VisualizationWrapperComponent implements OnInit, OnChanges {
   @Input() selectedControl: string;
   @Input() personSelected: string;
+
+  @ViewChild(LinearNetworkComponent) vis: LinearNetworkComponent;
 
   nodeStream: Observable<RawChangeSet>;
   edgeStream: Observable<RawChangeSet>;
@@ -45,9 +48,20 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if ('selectedControl' in changes) {
-      // TODO add actions for controlling animations on the visualization.
-      console.log('selected animation control - ', changes.selectedControl.currentValue); // TODO remove when appropriate functionality has been added
+    if ('selectedControl' in changes && this.vis) {
+      switch (changes.selectedControl.currentValue) {
+        case 'play':
+          this.vis.startEdgeAnimation();
+          break;
+
+        case 'pause':
+          this.vis.pauseEdgeAnimation();
+          break;
+
+        case 'stop':
+          this.vis.stopEdgeAnimation();
+          break;
+      }
     }
 
     if ('personSelected' in changes) {
