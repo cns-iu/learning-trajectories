@@ -1,23 +1,24 @@
 import { Injectable } from '@angular/core';
 
+import { Map } from 'immutable';
+
 import { DatabaseService } from 'learning-trajectories-database';
-import { selector } from './selector';
 
 @Injectable()
 export class PersonSelectorDataService {
-  persons: selector<string>[];
+  personNameToId: Map<string, string>;
 
-  constructor(private dataService: DatabaseService) { 
+  constructor(private dataService: DatabaseService) {
     dataService.getPersonNames().subscribe((names) => {
-      this.persons = names.map((name) => {
-        return {
-          value: name, 
-          viewValue: name.charAt(0).toUpperCase() 
-            + name.slice(1, name.length - 1) 
-            + ' ' 
-            + name.charAt(name.length - 1)
-        };
-      })
+      this.personNameToId = Map(names.map((name) => {
+        return [
+          name.charAt(0).toUpperCase()
+          + name.slice(1, name.length - 1)
+          + ' '
+          + name.charAt(name.length - 1),
+          name
+        ];
+      }));
     });
   }
 

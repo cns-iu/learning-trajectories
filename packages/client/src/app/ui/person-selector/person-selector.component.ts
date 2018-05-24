@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { selector } from '../shared/selector';
+import { Map } from 'immutable';
 
 import { PersonSelectorDataService } from '../shared/person-selector-data.service';
 
@@ -10,15 +10,21 @@ import { PersonSelectorDataService } from '../shared/person-selector-data.servic
   styleUrls: ['./person-selector.component.sass']
 })
 export class PersonSelectorComponent implements OnInit {
-  persons: selector<string>[];
-  selected: string;
+  personNameToId: Map<string, string>;
+  persons: string[];
+  selectedId: string; // person id, eg. person1
+
+  // person name or view value, eg. Person 1
+  get selectedName(): string {
+    return this.personNameToId.keyOf(this.selectedId);
+  }
 
   constructor(private dataService: PersonSelectorDataService) {
-    this.persons = this.dataService.persons;
-    this.selected = this.persons[1].value;
+    this.personNameToId = this.dataService.personNameToId;
+    this.persons = this.personNameToId.keySeq().toArray();
+    this.selectedId = this.personNameToId.get(this.persons[1]);
   }
 
   ngOnInit() {
   }
-
 }

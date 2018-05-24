@@ -1,6 +1,6 @@
 <mat-toolbar class="toolbar z-depth-1-half">
   <mat-icon class="hamburger" (click)="sidenav.toggle()">menu</mat-icon>
-  <span>Learning Trajectories: $courseTitle - $personId</span>
+  <span>Learning Trajectories: {{ wrapper.courseTitle }} - {{ selector.selectedName }}</span>
   <img id="cnsLogo" src="assets/cns-logo.png" title="Cyberinfrastructure for Network Science Center">
 </mat-toolbar>
 
@@ -23,7 +23,7 @@
     <mat-sidenav-content>
       <app-visualization-wrapper
         [selectedControl]="controls.selectedControl"
-        [personSelected]="selector.selected">
+        [personSelected]="selector.selectedId" #wrapper>
       </app-visualization-wrapper>
     </mat-sidenav-content>
 </mat-sidenav-container>
