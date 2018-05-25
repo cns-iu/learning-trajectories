@@ -18,7 +18,9 @@
 
         <p class="sidenavTitle legend">Legend</p>
         <hr>
-        <app-visualization-legends></app-visualization-legends>
+        <app-visualization-legends
+          [personSelected]="selector.selectedId">
+        </app-visualization-legends>
     </mat-sidenav>
 
     <mat-sidenav-content>

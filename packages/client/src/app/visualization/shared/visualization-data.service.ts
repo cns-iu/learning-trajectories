@@ -28,12 +28,28 @@ export class VisualizationDataService {
     }))
   });
 
+  // for legend labels original encoding data is needed.
+  readonly nodeSizeField = simpleField({
+    label: 'Node Size',
+    operator: chain(access<number>('events'), map((e) => {
+      return e;
+    }))
+  });
+
   readonly edgeWeightField = simpleField({
     label: 'Edge Weight',
     operator: chain(access<number>('count'), map((c) => {
       return .1;
       // return c / this.edgeStatistics.maxCount * .75 + .25;
       // return Math.abs(d) / this.edgeStatistics.maxDistance * .75 + .25;
+    }))
+  });
+
+  // for legend labels original encoding data is needed.
+  readonly edgeSizeField = simpleField({
+    label: 'Edge Size',
+    operator: chain(access<number>('distance'), map((d) => {
+      return d;
     }))
   });
 
