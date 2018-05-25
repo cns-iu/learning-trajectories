@@ -22,11 +22,13 @@ import * as fields from '../shared/linear-network-fields';
 export class VisualizationWrapperComponent implements OnInit, OnChanges {
   @Input() selectedControl: Observable<string>;
   @Input() personSelected: string;
+  @Output() animationEvents = new Subject<string>();
 
   @ViewChild(LinearNetworkComponent) vis: LinearNetworkComponent;
 
   nodeStream: Observable<RawChangeSet>;
   edgeStream: Observable<RawChangeSet>;
+
   courseTitle: string;
   courseTitleLookup: Map<string, string> = Map();
 
@@ -34,11 +36,11 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
 
   overflow = false; // visualization page overflow toggle
   animationDuration = 5;
-  @Output() animationEvents = new Subject<string>();
 
   constructor(private service: VisualizationDataService) {
     this.nodeStream = service.getNodes();
     this.edgeStream = service.getEdges();
+
     this.courseTitle = service.getTitle();
 
     const combinedFields = assign({}, fields, pick(service, [
@@ -75,8 +77,10 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
 
     if ('personSelected' in changes) {
       const filter = {personName: changes.personSelected.currentValue};
+
       this.nodeStream = this.service.getNodes(filter);
       this.edgeStream = this.service.getEdges(filter);
+
       this.courseTitle = this.courseTitleLookup.get(this.service.getTitle(filter));
     }
   }
