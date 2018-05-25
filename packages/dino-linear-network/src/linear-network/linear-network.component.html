@@ -1,8 +1,9 @@
 <svg #container [attr.width]="overflow ? width : '100%'">
   <g class="edge-group">
-    <path *ngFor="let edge of edges; trackBy: trackByEdge"
+    <path #edges
+        *ngFor="let edge of edges; let index = index; trackBy: trackByEdge"
         [matTooltip]="edge.tooltip"
-        [matTooltipPosition]="edge.sweepFlag ? 'above' : 'below'"
+        [matTooltipPosition]="edgeTooltipPosition(edge)"
         [attr.d]="edge.path"
         [style.stroke]="edge.color"
         [style.stroke-width]="3.5 * edge.weight">

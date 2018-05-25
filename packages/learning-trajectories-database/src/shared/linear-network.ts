@@ -1,17 +1,19 @@
 import { CourseModule, Transition } from './trajectory';
+import { List, Map } from 'immutable';
 
 export class LinearNetwork {
   readonly directed: string;
   readonly rawPersonName: string;
   readonly nodes: CourseModule[];
   readonly edges: Transition[];
-  private moduleIdToName: Map<string, CourseModule> = new Map();
+  private moduleIdToName: Map<string, CourseModule> = Map();
 
   constructor (rawPerson: any) {
     this.directed = rawPerson.directed[0] as string;
     this.rawPersonName = rawPerson.name[0] as string;
     this.nodes =  (rawPerson.vertices || []).map((m) => this.getNode(m)).filter((m) => m.events > 0);
     this.edges = (rawPerson.edges || []).map((e) => this.getEdge(e));
+    this.postProcessEdges(this.edges);
   }
 
   getNode(vertex: any) {
@@ -42,7 +44,9 @@ export class LinearNetwork {
         selfLoopCount: vertex.sl
       } as CourseModule;
 
-    this.moduleIdToName.set(courseModule.id, courseModule);
+    this.moduleIdToName = this.moduleIdToName.set(
+      courseModule.id, courseModule
+    );
 
     return courseModule;
   }
@@ -75,4 +79,24 @@ export class LinearNetwork {
     return courseTransition;
   }
 
+  private postProcessEdges(edges: Transition[]): void {
+    const overlapMap = Map<any, Transition[]>().withMutations((map) => {
+      edges.forEach((edge) => {
+        const key = List.of(edge.source, edge.target);
+        let list = map.get(key);
+        if (list === undefined) {
+          list = [];
+          map.set(key, list);
+        }
+        list.push(edge);
+      });
+    });
+
+    overlapMap.forEach((list) => {
+      const length = list.length;
+      list.forEach((edge) => {
+        edge.count = length;
+      });
+    });
+  }
 }

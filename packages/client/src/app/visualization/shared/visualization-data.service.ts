@@ -11,16 +11,10 @@ import { map } from '@ngx-dino/core/src/v2/operators/methods/transforming/map';
 import { Filter, DatabaseService } from 'learning-trajectories-database';
 
 
-function assignColors(ids: object): object {
-  return ids; // FIXME
-}
-
-
 @Injectable()
 export class VisualizationDataService {
   private nodeStatistics = {
-    maxNumEvents: 0,
-    level1Ids: {}
+    maxNumEvents: 0
   };
   private edgeStatistics = {
     maxDistance: 0
@@ -38,13 +32,6 @@ export class VisualizationDataService {
     label: 'Node Size',
     operator: chain(access<number>('events'), map((e) => {
       return e;
-    }))
-  });
-
-  readonly nodeColorField = simpleField({
-    label: 'nodeColor',
-    operator: chain(access<string>('level1Id'), map((id) => {
-      return this.nodeStatistics.level1Ids[id];
     }))
   });
 
@@ -76,14 +63,11 @@ export class VisualizationDataService {
   getNodes(filter: Partial<Filter> = {}): Observable<any> {
     return this.database.getNodes(filter).do((nodes) => {
       let maxNumEvents = 0;
-      const level1Ids = {};
       nodes.forEach((node) => {
         maxNumEvents = Math.max(node.events, maxNumEvents);
-        level1Ids[node.level1Id] = true;
       });
 
       this.nodeStatistics.maxNumEvents = maxNumEvents;
-      this.nodeStatistics.level1Ids = assignColors(level1Ids);
     }).map(RawChangeSet.fromArray);
   }
 

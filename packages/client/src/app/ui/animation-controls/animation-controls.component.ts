@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, Output, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'app-animation-controls',
@@ -7,32 +9,35 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AnimationControlsComponent implements OnInit {
   playPauseIcon = 'play_arrow';
-  selectedControl = 'stop';
+  @Output() selectedControl = new Subject<string>();
 
-  constructor() { }
+  constructor(private changeDetector: ChangeDetectorRef) { }
 
   ngOnInit() {
   }
-  
+
   onPlayToggle() {
-    switch(this.playPauseIcon) {
+    switch (this.playPauseIcon) {
       case 'play_arrow' :
-        this.selectedControl = 'play';
+        this.selectedControl.next('play');
         this.playPauseIcon = 'pause';
         break;
+
       case 'pause':
-        this.selectedControl = 'pause';
+        this.selectedControl.next('pause');
         this.playPauseIcon = 'play_arrow';
         break;
-      default: 
-        this.selectedControl = 'stop';
+
+      default:
+        this.selectedControl.next('play');
         this.playPauseIcon = 'play_arrow';
+        break;
     }
   }
 
   onStop() {
-    this.selectedControl = 'stop';
+    this.selectedControl.next('stop');
     this.playPauseIcon = 'play_arrow';
+    this.changeDetector.detectChanges();
   }
-
 }

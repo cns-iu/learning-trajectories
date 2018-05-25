@@ -245,13 +245,8 @@ export class LinearNetworkLayoutService {
       ledge.xRadius = ledge.yRadius = radius;
       ledge.sweepFlag = 1;
 
-      if (diff < 0) {
-        ledge.fromX = ledge.targetNode.x;
-        ledge.toX = ledge.sourceNode.x;
-        ledge.sweepFlag = 0;
-      }
-      // else if (diff === 0) {
-      //   // TODO
+      // if (diff === 0) {
+      //   // TODO self loop
       // }
     });
 
