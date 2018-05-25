@@ -13,7 +13,8 @@
 
         <p class="sidenavTitle">Animation Controls</p>
         <hr>
-        <app-animation-controls #controls></app-animation-controls>
+        <app-animation-controls #controls>
+        </app-animation-controls>
 
         <p class="sidenavTitle legend">Legend</p>
         <hr>
@@ -21,9 +22,10 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-      <app-visualization-wrapper
+      <app-visualization-wrapper #wrapper
         [selectedControl]="controls.selectedControl"
-        [personSelected]="selector.selectedId" #wrapper>
+        [personSelected]="selector.selectedId"
+        (animationEvents)="$event === 'stop' && controls.onStop()">
       </app-visualization-wrapper>
     </mat-sidenav-content>
 </mat-sidenav-container>

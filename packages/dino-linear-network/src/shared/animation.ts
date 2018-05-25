@@ -1,11 +1,15 @@
 import { QueryList, ElementRef } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
 
+
+export type AnimationEvent = 'start' | 'stop' | 'pause';
 
 export class EdgeAnimator {
   private state: 'stopped' | 'running' | 'paused' = 'stopped';
   private totalLength = -1;
   private currentAnimation: any;
   public duration: number;
+  readonly events = new Subject<AnimationEvent>();
 
   constructor(private elements: QueryList<ElementRef>) {
     elements.changes.subscribe(() => {
@@ -20,6 +24,8 @@ export class EdgeAnimator {
 
       case 'paused':
         this.currentAnimation.play();
+        this.state = 'running';
+        this.events.next('start');
         break;
 
       case 'stopped':
@@ -35,25 +41,29 @@ export class EdgeAnimator {
           this.startElement(this.elements.first.nativeElement, 0);
         }
 
+        this.state = 'running';
+        this.events.next('start');
         break;
     }
-    this.state = 'running';
   }
 
   pause(): void {
     if (this.state === 'running') {
+      if (this.currentAnimation) {
+        this.currentAnimation.pause();
+      }
+
       this.state = 'paused';
-    }
-    if (this.currentAnimation) {
-      this.currentAnimation.pause();
+      this.events.next('pause');
     }
   }
 
   stop(): void {
-    this.state = 'stopped';
     if (this.currentAnimation) {
       this.currentAnimation.cancel();
       this.currentAnimation = undefined;
+      this.state = 'stopped';
+      this.events.next('stop');
     }
 
     this.elements.forEach((e) => {
@@ -66,7 +76,7 @@ export class EdgeAnimator {
     this.removeAttributes(elements[index]);
 
     if (index + 1 === elements.length) {
-      this.state = 'stopped';
+      this.stop();
     } else {
       this.startElement(elements[index + 1] as SVGPathElement, index + 1);
     }

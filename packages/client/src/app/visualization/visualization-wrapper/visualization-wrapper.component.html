@@ -16,5 +16,6 @@
   [edgeTooltipField]="fields.edgeTooltipField"
 
   [overflow]="overflow"
-  [animDuration]="animationDuration">
+  [animDuration]="animationDuration"
+  (animEvents)="animationEvents.next($event)">
 </dino-linear-network>
