@@ -17,7 +17,8 @@ export class VisualizationDataService {
     maxNumEvents: 0
   };
   private edgeStatistics = {
-    maxDistance: 0
+    maxDistance: 0,
+    maxCount: 0
   };
 
   readonly nodeWeightField = simpleField({
@@ -29,15 +30,17 @@ export class VisualizationDataService {
 
   readonly edgeWeightField = simpleField({
     label: 'Edge Weight',
-    operator: chain(access<number>('distance'), map((d) => {
-      return Math.abs(d) / this.edgeStatistics.maxDistance * .75 + .25;
+    operator: chain(access<number>('count'), map((c) => {
+      return .1;
+      // return c / this.edgeStatistics.maxCount * .75 + .25;
+      // return Math.abs(d) / this.edgeStatistics.maxDistance * .75 + .25;
     }))
   });
 
   readonly edgeColorField = simpleField({
     label: 'Edge Color',
     operator: chain(access<string>('direction'), map((d) => {
-      return d.toLowerCase() === 'p' ? 'lightblue' : 'purple';
+      return d.toLowerCase() === 'p' ? 'blue' : 'purple';
     }))
   });
 
@@ -58,11 +61,14 @@ export class VisualizationDataService {
   getEdges(filter: Partial<Filter> = {}): Observable<any> {
     return this.database.getEdges(filter).do((edges) => {
       let maxDistance = 0;
+      let maxCount = 0;
       edges.forEach((edge) => {
         maxDistance = Math.max(Math.abs(edge.distance), maxDistance);
+        maxCount = Math.max(edge.count, maxCount);
       });
 
       this.edgeStatistics.maxDistance = maxDistance;
+      this.edgeStatistics.maxCount = maxCount;
     }).map(RawChangeSet.fromArray);
   }
 
