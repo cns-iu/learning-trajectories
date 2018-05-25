@@ -7,6 +7,7 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { assign, mapValues, pick } from 'lodash';
+import { Map } from 'immutable';
 
 import { BoundField, RawChangeSet } from '@ngx-dino/core';
 import { LinearNetworkComponent } from '@ngx-dino/linear-network';
@@ -27,6 +28,7 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
   nodeStream: Observable<RawChangeSet>;
   edgeStream: Observable<RawChangeSet>;
   courseTitle: string;
+  courseTitleLookup: Map<string, string> = Map();
 
   fields: {[key: string]: BoundField<any>};
 
@@ -43,6 +45,10 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
       'nodeWeightField', 'edgeWeightField', 'edgeColorField'
     ]));
     this.fields = mapValues(combinedFields, (f) => f.getBoundField());
+
+    this.courseTitleLookup = this.courseTitleLookup.set(
+      'MITProfessionalX+SysEngxB1+3T2016', 'Architecture of Complex Systems, Fall 2016'
+    ); // TODO
   }
 
   ngOnInit() {
@@ -71,7 +77,7 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
       const filter = {personName: changes.personSelected.currentValue};
       this.nodeStream = this.service.getNodes(filter);
       this.edgeStream = this.service.getEdges(filter);
-      this.courseTitle = this.service.getTitle(filter);
+      this.courseTitle = this.courseTitleLookup.get(this.service.getTitle(filter));
     }
   }
 }
