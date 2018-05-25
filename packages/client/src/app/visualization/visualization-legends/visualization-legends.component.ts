@@ -41,7 +41,7 @@ export class VisualizationLegendsComponent implements OnInit, OnChanges {
   fields: {[key: string]: BoundField<any>};
 
   edgeLegendTitle = 'Absolute Distance';
-  edgeSizeRange = [0.875, 3.5];
+  edgeSizeRange = [0.35, 0.35];
   edgeShape = 'Edge';
   edgeColorEncoding = 'Direction';
   edgeLabelToColor: Map<string, string>;
