@@ -21,7 +21,7 @@ import { DatabaseService } from 'learning-trajectories-database';
     VisualizationWrapperComponent,
     VisualizationLegendsComponent
   ],
-  providers:[
+  providers: [
     VisualizationDataService,
     DatabaseService
   ],

@@ -26,7 +26,7 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
 
   fields: {[key: string]: BoundField<any>};
 
-  overflow = false;
+  overflow = false; // visualization page overflow toggle
 
   constructor(private service: VisualizationDataService) {
     this.nodeStream = service.getNodes();

@@ -77,7 +77,6 @@ export class LinearNetworkComponent implements OnInit, OnChanges, DoCheck {
       this.getIdMap(),
       this.getFieldMap()
     );
-    console.log(this); // TODO Remove me later
   }
 
   ngOnChanges(changes: SimpleChanges): void {
