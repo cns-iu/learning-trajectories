@@ -40,8 +40,7 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
     this.courseTitle = service.getTitle();
 
     const combinedFields = assign({}, fields, pick(service, [
-      'nodeWeightField', 'nodeColorField',
-      'edgeWeightField', 'edgeColorField'
+      'nodeWeightField', 'edgeWeightField', 'edgeColorField'
     ]));
     this.fields = mapValues(combinedFields, (f) => f.getBoundField());
   }

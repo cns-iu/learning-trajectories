@@ -16,7 +16,38 @@ export const nodeOrderField = simpleField({
 });
 
 // Node weight implemented in service
-// Node color implemented in service
+
+export const nodeColorField = simpleField({
+  label: 'nodeColor',
+  operator: chain(access<string>('moduleType'), map((type) => {
+    if (type.endsWith('+block')) {
+      type = type.slice(0, -6);
+    }
+
+    switch (type) {
+      case 'html':
+        return '#90CBFB';
+
+      case 'problem':
+        return '#EFC96A';
+
+      case 'video':
+        return '#70B637';
+
+      case 'openassessment':
+        return '#8E1B86';
+
+      case 'drag-and-drop-v2':
+        return '#FDFF7E';
+
+      case 'word_cloud':
+        return '#C24519';
+
+      default:
+        return '#000000';
+    }
+  }))
+});
 
 export const nodeTooltipField = simpleField({
   label: 'Node Tooltip',
