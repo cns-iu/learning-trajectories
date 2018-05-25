@@ -47,6 +47,8 @@ export interface Transition {
   userId: number; // user for the edge
 
   selfLoopFlag: boolean; // self-loop event flag where source and target are equal
+
+  count: number; // Number of edges with the same source and target
 }
 
 export interface Trajectory {

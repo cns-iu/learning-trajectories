@@ -90,5 +90,17 @@ export const edgeTargetField = simpleField({
 
 export const edgeTooltipField = simpleField({
   label: 'Edge Tooltip',
-  operator: map(() => 'FIXME') // FIXME
+  operator: chain(combine({
+    sourceLabel: access(['sourceModule', 'level2Label']),
+    targetLabel: access(['targetModule', 'level2Label']),
+    direction: chain(access('direction'), map((d) => {
+      return d === 'p' ? '->' : '<-';
+    })),
+    count: access('count')
+  }), map(({sourceLabel, targetLabel, direction, count}) => {
+    return [
+      `${sourceLabel} ${direction} ${targetLabel}`,
+      `Number of Transitions: ${count}`
+    ].join('\n');
+  }))
 });
