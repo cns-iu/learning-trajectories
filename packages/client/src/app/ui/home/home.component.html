@@ -7,16 +7,17 @@
 <mat-sidenav-container>
     <mat-sidenav #sidenav mode="side"
       [opened] = "true"
-      class="sidenavContainer"
+      class="sidenav-container"
       (openedChange)="openState=$event">
+        
         <app-person-selector #selector></app-person-selector>
 
-        <p class="sidenavTitle">Animation Controls</p>
+        <p class="sidenav-title">Animation Controls</p>
         <hr>
         <app-animation-controls #controls>
         </app-animation-controls>
 
-        <p class="sidenavTitle legend">Legend</p>
+        <p class="sidenav-title legend">Legend</p>
         <hr>
         <app-visualization-legends
           [personSelected]="selector.selectedId">

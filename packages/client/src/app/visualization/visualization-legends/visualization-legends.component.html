@@ -1,4 +1,9 @@
-<div class="colorLegend">
+<div class="note">
+  <h2> Node Order </h2>
+  <div class="note-text">Nodes ordered by course module sequence.</div>
+</div>
+
+<div class="color-legend">
   <color-legend
     [shape]="nodeShape"
     [colorEncodingTitle]="nodeColorEncoding"
@@ -6,7 +11,7 @@
   </color-legend>
 </div>
 
-<div class="nodeSizeLegend">
+<div class="node-size-legend">
   <node-size-legend 
     [dataStream]="nodeStream"
     [nodeIdField]="fields.nodeIdField"
@@ -16,7 +21,7 @@
   </node-size-legend>
 </div>
 
-<div class="colorLegend">
+<div class="color-legend">
   <color-legend 
     [shape]="edgeShape"
     [colorEncodingTitle]="edgeColorEncoding"
