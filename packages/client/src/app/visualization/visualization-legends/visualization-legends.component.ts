@@ -32,11 +32,11 @@ export class VisualizationLegendsComponent implements OnInit, OnChanges {
   nodeStream: Observable<RawChangeSet>;
   edgeStream: Observable<RawChangeSet>;
 
-  nodeLegendTitle = '# Event Interactions';
+  nodeLegendTitle = '# Interactions';
   nodeSizeRange: number[] = [10, 20];
   nodeLabelToColor: Map<string, string>;
   nodeShape = 'Node';
-  nodeColorEncoding = 'Event Type';
+  nodeColorEncoding = 'Module Type';
 
   fields: {[key: string]: BoundField<any>};
 
@@ -68,7 +68,7 @@ export class VisualizationLegendsComponent implements OnInit, OnChanges {
     ]);
 
     this.edgeLabelToColor = OrderedMap([
-      ['Forward Direction', 'lightblue'],
+      ['Forward Direction', 'blue'],
       ['Backward Direction', 'purple']
     ]);
   }
