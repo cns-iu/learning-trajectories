@@ -199,10 +199,10 @@ export class LinearNetworkLayoutService {
     // Calculate width
     const lastNode = lnodes[lnodes.length - 1] || {x: 0, radius: 0};
     const width = lastNode.x + lastNode.radius;
- 
+
     // Scale if not overflow
-    if (!this.overflow && this.maxWidth > 0 && width > this.maxWidth) {
-      const factor = this.maxWidth / width;
+    if (!this.overflow && this.maxWidth > 0) {
+      const factor = Math.min(1, this.maxWidth / width);
       this.nodeSizeFactor = factor;
       lnodes.forEach((lnode) => {
         lnode.x *= factor;

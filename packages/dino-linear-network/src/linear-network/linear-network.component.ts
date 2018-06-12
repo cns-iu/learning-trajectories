@@ -122,7 +122,7 @@ export class LinearNetworkComponent implements OnInit, AfterViewInit, OnChanges,
       height: {animVal: {value: height = 0} = {}} = {}
     } = {}} = {}} = this;
 
-    if (!this.overflow && this.width !== width) {
+    if (this.width !== width) {
       update = true;
       this.width = width;
     }
