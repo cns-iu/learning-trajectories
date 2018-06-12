@@ -1,8 +1,8 @@
 import { simpleField } from '@ngx-dino/core';
-import { access } from '@ngx-dino/core/src/v2/operators/methods/extracting/access';
-import { combine } from '@ngx-dino/core/src/v2/operators/methods/grouping/combine';
-import { chain } from '@ngx-dino/core/src/v2/operators/methods/grouping/chain';
-import { map } from '@ngx-dino/core/src/v2/operators/methods/transforming/map';
+import { access } from '@ngx-dino/core/src/operators/methods/extracting/access';
+import { combine } from '@ngx-dino/core/src/operators/methods/grouping/combine';
+import { chain } from '@ngx-dino/core/src/operators/methods/grouping/chain';
+import { map } from '@ngx-dino/core/src/operators/methods/transforming/map';
 
 
 export const nodeIdField = simpleField({

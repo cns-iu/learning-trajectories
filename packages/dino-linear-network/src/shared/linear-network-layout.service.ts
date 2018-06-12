@@ -102,6 +102,8 @@ export class LinearNetworkLayoutService {
   readonly edges = new Subject<LayoutEdge[]>();
   readonly width = new Subject<number>();
 
+  nodeSizeFactor: number;
+
   constructor(private service: LinearNetworkService) {
     this.service.sortedNodes.subscribe((nodes) => {
       const {nodes: lnodes, width} = this.calculateNodeLayout(nodes);
@@ -197,11 +199,11 @@ export class LinearNetworkLayoutService {
     // Calculate width
     const lastNode = lnodes[lnodes.length - 1] || {x: 0, radius: 0};
     const width = lastNode.x + lastNode.radius;
-
-
+ 
     // Scale if not overflow
     if (!this.overflow && this.maxWidth > 0 && width > this.maxWidth) {
       const factor = this.maxWidth / width;
+      this.nodeSizeFactor = factor;
       lnodes.forEach((lnode) => {
         lnode.x *= factor;
         lnode.radius *= factor;

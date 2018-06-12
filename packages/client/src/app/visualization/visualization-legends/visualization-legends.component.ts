@@ -3,7 +3,8 @@ import {
   OnInit,
   OnChanges,
   SimpleChanges,
-  Input
+  Input,
+  ChangeDetectorRef
 } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
@@ -28,12 +29,14 @@ import * as fields from '../shared/linear-network-fields';
 })
 export class VisualizationLegendsComponent implements OnInit, OnChanges {
   @Input() personSelected: string;
+  @Input() nodeSizeFactor: number;
 
   nodeStream: Observable<RawChangeSet>;
   edgeStream: Observable<RawChangeSet>;
 
   nodeLegendTitle = '# Interactions';
-  nodeSizeRange: number[] = [10, 20];
+  nodeSizeRangeLimits: number[] = [10, 20];
+  nodeSizeRange: number[] = this.nodeSizeRangeLimits;
   nodeLabelToColor: Map<string, string>;
   nodeShape = 'Node';
   nodeColorEncoding = 'Module Type';
@@ -76,11 +79,20 @@ export class VisualizationLegendsComponent implements OnInit, OnChanges {
   ngOnInit() {
   }
 
+  onNodeSizeFactorChange(factor: number) {
+    if (factor !== this.nodeSizeFactor) {
+      setTimeout(() => {
+        this.nodeSizeFactor = factor;
+        this.nodeSizeRange = this.nodeSizeRangeLimits.map(l => l * factor);
+      });
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if ('personSelected' in changes) {
       const filter = {personName: changes.personSelected.currentValue};
       this.nodeStream = this.service.getNodes(filter);
-      this.edgeStream  = this.service.getEdges(filter);
+      this.edgeStream = this.service.getEdges(filter);
     }
   }
 }

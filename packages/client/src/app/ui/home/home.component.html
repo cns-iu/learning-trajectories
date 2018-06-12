@@ -19,7 +19,7 @@
 
         <p class="sidenav-title legend">Legend</p>
         <hr>
-        <app-visualization-legends
+        <app-visualization-legends #legend
           [personSelected]="selector.selectedId">
         </app-visualization-legends>
     </mat-sidenav>
@@ -28,7 +28,9 @@
       <app-visualization-wrapper #wrapper
         [selectedControl]="controls.selectedControl"
         [personSelected]="selector.selectedId"
-        (animationEvents)="$event === 'stop' && controls.onStop()">
+        [overflow]="false"
+        (animationEvents)="$event === 'stop' && controls.onStop()"
+        (nodeSizeFactorChange)="legend.onNodeSizeFactorChange($event)">
       </app-visualization-wrapper>
     </mat-sidenav-content>
 </mat-sidenav-container>

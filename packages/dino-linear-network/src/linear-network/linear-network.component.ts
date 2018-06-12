@@ -1,7 +1,7 @@
 import {
   Component, Input, Output, ViewChild, ViewChildren,
   OnInit, OnChanges, DoCheck, AfterViewInit,
-  SimpleChanges, ElementRef, QueryList, ViewEncapsulation
+  SimpleChanges, ElementRef, QueryList, ViewEncapsulation, EventEmitter
 } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
@@ -51,11 +51,12 @@ export class LinearNetworkComponent implements OnInit, AfterViewInit, OnChanges,
 
 
   // Layout configuration
-  @Input() overflow: boolean;
+  @Input() overflow = false;
   @Input() separation: Separation;
   @Input() size: Size;
   @Input() edgeHeight: EdgeHeight = '85%';
 
+  @Output() nodeSizeFactorChange = new EventEmitter();
 
   // Elements
   @ViewChild('container') svg: ElementRef;
@@ -63,6 +64,7 @@ export class LinearNetworkComponent implements OnInit, AfterViewInit, OnChanges,
   width = 0;
   height = 0;
 
+  nodeSizeFactor = 1;
 
   // Data
   nodes: LayoutNode[];
@@ -132,6 +134,11 @@ export class LinearNetworkComponent implements OnInit, AfterViewInit, OnChanges,
     // Update layout
     if (update) {
       this.updateLayout(width, height);
+    }
+
+    if (this.nodeSizeFactor !== this.service.nodeSizeFactor) {
+      this.nodeSizeFactor = this.service.nodeSizeFactor;
+      this.nodeSizeFactorChange.emit(this.service.nodeSizeFactor);
     }
   }
 

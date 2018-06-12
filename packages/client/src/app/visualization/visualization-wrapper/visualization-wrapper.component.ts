@@ -1,5 +1,5 @@
 import {
-  Component, Input, Output, ViewChild,
+  Component, EventEmitter, Input, Output, ViewChild,
   OnInit, OnChanges,
   SimpleChanges
 } from '@angular/core';
@@ -22,7 +22,10 @@ import * as fields from '../shared/linear-network-fields';
 export class VisualizationWrapperComponent implements OnInit, OnChanges {
   @Input() selectedControl: Observable<string>;
   @Input() personSelected: string;
+  @Input() overflow = false; // visualization page overflow toggle
+  
   @Output() animationEvents = new Subject<string>();
+  @Output() nodeSizeFactorChange = new EventEmitter<number>();
 
   @ViewChild(LinearNetworkComponent) vis: LinearNetworkComponent;
 
@@ -34,7 +37,6 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
 
   fields: {[key: string]: BoundField<any>};
 
-  overflow = false; // visualization page overflow toggle
   animationDuration = 5;
 
   constructor(private service: VisualizationDataService) {
@@ -83,5 +85,9 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
 
       this.courseTitle = this.courseTitleLookup.get(this.service.getTitle(filter));
     }
+  }
+
+  onNodeSizeFactorChange(factor: number) {
+    this.nodeSizeFactorChange.emit(factor);
   }
 }

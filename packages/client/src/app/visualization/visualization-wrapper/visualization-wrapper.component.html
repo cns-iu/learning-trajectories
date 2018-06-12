@@ -19,6 +19,7 @@
     [overflow]="overflow"
     [edgeHeight]="'90%'"
     [animDuration]="animationDuration"
-    (animEvents)="animationEvents.next($event)">
+    (animEvents)="animationEvents.next($event)"
+    (nodeSizeFactorChange)="onNodeSizeFactorChange($event)">
   </dino-linear-network>
 </div>
