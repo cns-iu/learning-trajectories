@@ -53,11 +53,10 @@ export class VisualizationDataService {
     }))
   });
 
+  // edge color does not have an encoding right now
   readonly edgeColorField = simpleField({
     label: 'Edge Color',
-    operator: chain(access<string>('direction'), map((d) => {
-      return d.toLowerCase() === 'p' ? 'blue' : 'purple';
-    }))
+    operator: map((d) => '#3D3D3D')
   });
 
 

@@ -23,7 +23,7 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
   @Input() selectedControl: Observable<string>;
   @Input() personSelected: string;
   @Input() overflow = false; // visualization page overflow toggle
-  
+
   @Output() animationEvents = new Subject<string>();
   @Output() nodeSizeFactorChange = new EventEmitter<number>();
 

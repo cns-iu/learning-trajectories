@@ -1,4 +1,9 @@
 <div class="animationControls">
+    <button mat-icon-button>
+        <mat-icon>
+          fast_rewind
+        </mat-icon>
+    </button>
     <button mat-icon-button (click)="onPlayToggle()" >
         <mat-icon>
           {{playPauseIcon}}
@@ -7,6 +12,11 @@
     <button mat-icon-button (click)="onStop()">
         <mat-icon>
           stop
+        </mat-icon>
+    </button>
+    <button mat-icon-button>
+        <mat-icon>
+          fast_forward
         </mat-icon>
     </button>
 </div>

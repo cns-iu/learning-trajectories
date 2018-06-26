@@ -78,7 +78,9 @@ export class LinearNetworkComponent implements OnInit, AfterViewInit, OnChanges,
 
 
   constructor(private service: LinearNetworkLayoutService) {
-    service.nodes.subscribe((nodes) => (this.nodes = nodes));
+    service.nodes.subscribe((nodes) => {
+      return (this.nodes = nodes);
+    });
     service.edges.subscribe((edges) => {
       this.edges = edges;
       this.stopEdgeAnimation();

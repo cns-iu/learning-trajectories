@@ -11,10 +11,6 @@ import { Observable } from 'rxjs/Observable';
 
 import { Map, OrderedMap } from 'immutable';
 
-import * as d3Selection from 'd3-selection';
-import * as d3Array from 'd3-array';
-import { scaleLinear } from 'd3-scale';
-
 import { assign, mapValues, pick } from 'lodash';
 
 import { BoundField, RawChangeSet } from '@ngx-dino/core';
@@ -70,6 +66,7 @@ export class VisualizationLegendsComponent implements OnInit, OnChanges {
       ['Drag and Drop Problem Modules', '#FDFF7E']
     ]);
 
+    // Not available right now
     this.edgeLabelToColor = OrderedMap([
       ['Forward Direction', 'blue'],
       ['Backward Direction', 'purple']
