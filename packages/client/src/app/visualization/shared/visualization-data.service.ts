@@ -53,10 +53,10 @@ export class VisualizationDataService {
     }))
   });
 
-  // edge color does not have an encoding right now
+  // edge color does not have an encoding right now.
   readonly edgeColorField = simpleField({
     label: 'Edge Color',
-    operator: map((d) => '#3D3D3D')
+    operator: map((d) => '#575757')
   });
 
 

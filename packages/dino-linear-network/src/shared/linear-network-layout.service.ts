@@ -4,7 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/combineLatest';
 
-import { List, Map } from 'immutable';
+
+import { List, Map, OrderedMap } from 'immutable';
 import { isArray, isFunction, isString, assign } from 'lodash';
 
 import {
@@ -101,16 +102,20 @@ export class LinearNetworkLayoutService {
   readonly nodes = new Subject<LayoutNode[]>();
   readonly edges = new Subject<LayoutEdge[]>();
   readonly width = new Subject<number>();
+  readonly labels = new Subject<OrderedMap<string,
+    {formattedLabel: string[], positions: number[]}>>();
 
   nodeSizeFactor: number;
 
   constructor(private service: LinearNetworkService) {
     this.service.sortedNodes.subscribe((nodes) => {
       const {nodes: lnodes, width} = this.calculateNodeLayout(nodes);
-
+      const labels = this.calculateLabelLayout(lnodes);
       this.currentNodes = nodes;
+
       this.nodes.next(lnodes);
       this.width.next(width);
+      this.labels.next(labels);
     });
     this.service.sortedEdges.combineLatest(this.nodes).subscribe(([edges, nodes]) => {
       try {
@@ -157,9 +162,12 @@ export class LinearNetworkLayoutService {
 
     const {nodes, width} = this.calculateNodeLayout(this.currentNodes);
     const {edges} = this.calculateEdgeLayout(nodes, this.currentEdges);
+    const labels = this.calculateLabelLayout(nodes);
+
     this.nodes.next(nodes);
     this.edges.next(edges);
     this.width.next(width);
+    this.labels.next(labels);
   }
 
 
@@ -194,7 +202,6 @@ export class LinearNetworkLayoutService {
         lnode.x = offset + separation + lnode.radius;
       }
     });
-
 
     // Calculate width
     const lastNode = lnodes[lnodes.length - 1] || {x: 0, radius: 0};
@@ -284,4 +291,45 @@ export class LinearNetworkLayoutService {
 
     return {edges: ledges};
   }
+
+  calculateLabelLayout(lnodes: LayoutNode[]): OrderedMap<string, {formattedLabel: string[], positions: number[]}> {
+    let labelPositions: OrderedMap<string, {formattedLabel: string[], positions: number[]}> = OrderedMap();
+    lnodes.forEach((node) => {
+      const label = node.label.toString();
+      if (!labelPositions.has(label)) {
+        labelPositions = labelPositions.set(label, {
+          formattedLabel: this.formatLabel(label), positions: [node.x - node.radius, node.x + node.radius]
+        });
+      } else {
+        if (node.x - node.radius < labelPositions.get(label).positions[0]) {
+          const max = labelPositions.get(label).positions[1];
+          labelPositions = labelPositions.set(label, {
+            formattedLabel: this.formatLabel(label), positions: [node.x - node.radius, max]
+          });
+        }
+        if (node.x + node.radius > labelPositions.get(label).positions[1]) {
+          const min = labelPositions.get(label).positions[0];
+          labelPositions = labelPositions.set(label, {
+            formattedLabel: this.formatLabel(label), positions: [min, node.x + node.radius]
+          });
+        }
+      }
+    });
+    return labelPositions;
+  }
+
+  // TODO formatting can be improved
+  private formatLabel(label: string): string[] {
+    const subtitleSplit = label.trim().split(':');
+   if (subtitleSplit.length > 1) {
+     return Array.of(subtitleSplit[0].trim());
+   } else {
+     const metaDataSplit = label.trim().split('(');
+     if (metaDataSplit.length > 1) {
+       return Array.of(metaDataSplit[0].trim());
+     }
+   }
+   return Array.of(label.trim());
+  }
 }
+

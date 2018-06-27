@@ -104,3 +104,8 @@ export const edgeTooltipField = simpleField({
     ].join('\n');
   }))
 });
+
+export const nodeLabelField = simpleField({
+  label: 'Node Group Label',
+  operator: access('level1Label')
+});

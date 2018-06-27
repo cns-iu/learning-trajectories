@@ -5,6 +5,7 @@ export interface NodeData {
   order: number;
   weight: number;
 
+  label: string;
   color: string;
   tooltip: string;
 }

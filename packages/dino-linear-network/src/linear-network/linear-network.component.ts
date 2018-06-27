@@ -8,6 +8,8 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { throttle } from 'lodash';
 
+import { Map } from 'immutable';
+
 import {
   BoundField,
   DatumId, idSymbol,
@@ -36,6 +38,7 @@ export class LinearNetworkComponent implements OnInit, AfterViewInit, OnChanges,
   @Input() nodeWeightField: BoundField<number>;
   @Input() nodeColorField: BoundField<string>;
   @Input() nodeTooltipField: BoundField<string>;
+  @Input() nodeLabelField: BoundField<string>;
 
 
   // Edge data input
@@ -69,6 +72,7 @@ export class LinearNetworkComponent implements OnInit, AfterViewInit, OnChanges,
   // Data
   nodes: LayoutNode[];
   edges: LayoutEdge[];
+  labels: any[][];
 
 
   // Animation
@@ -86,6 +90,10 @@ export class LinearNetworkComponent implements OnInit, AfterViewInit, OnChanges,
       this.stopEdgeAnimation();
     });
     service.width.subscribe((width) => (this.width = width));
+
+    service.labels.subscribe((labels) => {
+      return (this.labels = labels.entrySeq().toArray());
+    });
   }
 
   ngOnInit(): void {
@@ -199,6 +207,7 @@ export class LinearNetworkComponent implements OnInit, AfterViewInit, OnChanges,
       nodeWeight: this.nodeWeightField,
       nodeColor: this.nodeColorField,
       nodeTooltip: this.nodeTooltipField,
+      nodeLabel: this.nodeLabelField,
 
       edgeOrder: this.edgeOrderField,
       edgeWeight: this.edgeWeightField,
