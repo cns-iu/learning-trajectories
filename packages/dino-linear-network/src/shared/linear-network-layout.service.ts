@@ -6,7 +6,7 @@ import 'rxjs/add/operator/combineLatest';
 
 
 import { List, Map, OrderedMap } from 'immutable';
-import { isArray, isFunction, isString, assign } from 'lodash';
+import { isFunction, isString, assign } from 'lodash';
 
 import {
   BoundField,
@@ -102,8 +102,7 @@ export class LinearNetworkLayoutService {
   readonly nodes = new Subject<LayoutNode[]>();
   readonly edges = new Subject<LayoutEdge[]>();
   readonly width = new Subject<number>();
-  readonly labels = new Subject<OrderedMap<string,
-    {formattedLabel: string[], positions: number[]}>>();
+  readonly labels = new Subject<OrderedMap<string, number[]>>();
 
   nodeSizeFactor: number;
 
@@ -292,44 +291,24 @@ export class LinearNetworkLayoutService {
     return {edges: ledges};
   }
 
-  calculateLabelLayout(lnodes: LayoutNode[]): OrderedMap<string, {formattedLabel: string[], positions: number[]}> {
-    let labelPositions: OrderedMap<string, {formattedLabel: string[], positions: number[]}> = OrderedMap();
+  calculateLabelLayout(lnodes: LayoutNode[]): OrderedMap<string, number[]> {
+    let labelPositions: OrderedMap<string, number[]> = OrderedMap();
     lnodes.forEach((node) => {
       const label = node.label.toString();
       if (!labelPositions.has(label)) {
-        labelPositions = labelPositions.set(label, {
-          formattedLabel: this.formatLabel(label), positions: [node.x - node.radius, node.x + node.radius]
-        });
+        labelPositions = labelPositions.set(label, [node.x - node.radius, node.x + node.radius]);
       } else {
-        if (node.x - node.radius < labelPositions.get(label).positions[0]) {
-          const max = labelPositions.get(label).positions[1];
-          labelPositions = labelPositions.set(label, {
-            formattedLabel: this.formatLabel(label), positions: [node.x - node.radius, max]
-          });
+        if (node.x - node.radius < labelPositions.get(label)[0]) {
+          const max = labelPositions.get(label)[1];
+          labelPositions = labelPositions.set(label, [node.x - node.radius, max]);
         }
-        if (node.x + node.radius > labelPositions.get(label).positions[1]) {
-          const min = labelPositions.get(label).positions[0];
-          labelPositions = labelPositions.set(label, {
-            formattedLabel: this.formatLabel(label), positions: [min, node.x + node.radius]
-          });
+        if (node.x + node.radius > labelPositions.get(label)[1]) {
+          const min = labelPositions.get(label)[0];
+          labelPositions = labelPositions.set(label, [min, node.x + node.radius]);
         }
       }
     });
     return labelPositions;
-  }
-
-  // TODO formatting can be improved
-  private formatLabel(label: string): string[] {
-    const subtitleSplit = label.trim().split(':');
-   if (subtitleSplit.length > 1) {
-     return Array.of(subtitleSplit[0].trim());
-   } else {
-     const metaDataSplit = label.trim().split('(');
-     if (metaDataSplit.length > 1) {
-       return Array.of(metaDataSplit[0].trim());
-     }
-   }
-   return Array.of(label.trim());
   }
 }
 

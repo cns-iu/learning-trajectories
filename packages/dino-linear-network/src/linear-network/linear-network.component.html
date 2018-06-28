@@ -1,20 +1,15 @@
 <svg #container [attr.width]="overflow ? width : '100%'">
   <g>
     <rect *ngFor="let entry of labels" 
-      [attr.x]="entry[1].positions[0]"
-      [attr.width]="entry[1].positions[1] - entry[1].positions[0]" 
+      [attr.x]="entry[1][0]"
+      [attr.width]="entry[1][1] - entry[1][0]" 
       [attr.height]="height"
       [style.fill]="'#f5f5f5'"/>
-    <text *ngFor="let entry of labels"
-      [attr.x]="entry[1].positions[0]" 
-      [attr.y]="10"
-      [style.font-size]="14" 
-      [attr.textLength]="entry[1].positions[1] - entry[1].positions[0]"
-      [attr.lengthAdjust]="spacing">
-      <tspan *ngFor="let label of entry[1].formattedLabel" 
-        [attr.x]="entry[1].positions[0] - 1"
-        [attr.dy]="10">{{label}}</tspan>
-    </text>
+      <text *ngFor="let entry of labels" 
+        [style.font-size]="14"
+        [attr.transform]="'translate('+(entry[1][0]+5)+', 10) rotate(90)'">
+          {{entry[0]}}
+      </text>
   </g>
 
   <g class="edge-group">

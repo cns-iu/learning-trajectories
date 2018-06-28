@@ -90,10 +90,7 @@ export class LinearNetworkComponent implements OnInit, AfterViewInit, OnChanges,
       this.stopEdgeAnimation();
     });
     service.width.subscribe((width) => (this.width = width));
-
-    service.labels.subscribe((labels) => {
-      return (this.labels = labels.entrySeq().toArray());
-    });
+    service.labels.subscribe((labels) => (this.labels = labels.entrySeq().toArray()));
   }
 
   ngOnInit(): void {

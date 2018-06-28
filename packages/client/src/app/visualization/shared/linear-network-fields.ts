@@ -105,7 +105,21 @@ export const edgeTooltipField = simpleField({
   }))
 });
 
-export const nodeLabelField = simpleField({
+export const nodeLabelField = simpleField<string>({
   label: 'Node Group Label',
-  operator: access('level1Label')
+  operator: chain(
+    access('level1Label'),
+    map((label: string): string => {
+      const subtitleSplit = label.trim().split(':');
+      if (subtitleSplit.length > 1) {
+        return subtitleSplit[0].trim();
+      } else {
+        const metaDataSplit = label.trim().split('(');
+        if (metaDataSplit.length > 1) {
+          return metaDataSplit[0].trim();
+        }
+      }
+      return label.trim();
+    })
+  )
 });
