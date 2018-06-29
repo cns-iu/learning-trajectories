@@ -8,6 +8,7 @@ import * as person2 from '../../../../raw-data/person2.json';
 import * as person3 from '../../../../raw-data/person3.json';
 import * as person4 from '../../../../raw-data/person4.json';
 import * as person5 from '../../../../raw-data/person5.json';
+import * as personsMetaData from '../../../../raw-data/person-metadata.json';
 
 const rawPersons = [
   person1,
@@ -30,13 +31,20 @@ export class LearnerTrajectoriesDatabase {
       const personName = 'person' + i;
       const rawPerson = rawPersons[i-1];
       if (!(personName in rawNetworks)) {
+        const rawMetaData = personsMetaData.filter(m => m.user_id === rawPerson.name[0])[0];
         //TODO get Course ID in a better way
-        rawNetworks[personName] = Map().set(rawPerson.vertices[0].courseID, new LinearNetwork(rawPerson));
+        rawNetworks[personName] = Map().set(
+          rawPerson.vertices[0].courseID, 
+          new LinearNetwork(rawPerson, rawMetaData)
+        );
       } else {
-        rawNetworks[personName] = rawNetworks[personName].set(rawPerson.vertices[0].courseID, new LinearNetwork(rawPerson));
+        const rawMetaData = personsMetaData.filter(m => m.user_id = rawPerson.name[0])[0];
+        rawNetworks[personName] = rawNetworks[personName].set(
+          rawPerson.vertices[0].courseID, 
+          new LinearNetwork(rawPerson, rawMetaData)
+        );
       }
     }
-
     return rawNetworks;
   }
 }

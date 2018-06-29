@@ -11,8 +11,12 @@ import { Map } from 'immutable';
 
 import { BoundField, RawChangeSet } from '@ngx-dino/core';
 import { LinearNetworkComponent } from '@ngx-dino/linear-network';
+
+import { PersonMetaData } from 'learning-trajectories-database';
+
 import { VisualizationDataService } from '../shared/visualization-data.service';
 import * as fields from '../shared/linear-network-fields';
+
 
 @Component({
   selector: 'app-visualization-wrapper',
@@ -32,6 +36,8 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
   nodeStream: Observable<RawChangeSet>;
   edgeStream: Observable<RawChangeSet>;
 
+  personMetaData: PersonMetaData;
+
   courseTitle: string;
   courseTitleLookup: Map<string, string> = Map();
 
@@ -44,6 +50,10 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
     this.edgeStream = service.getEdges();
 
     this.courseTitle = service.getTitle();
+
+    this.personMetaData = service.getPersonMetaData();
+
+    console.log(this.personMetaData);
 
     const combinedFields = assign({}, fields, pick(service, [
       'nodeWeightField', 'edgeWeightField', 'edgeColorField'
@@ -84,6 +94,8 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
       this.edgeStream = this.service.getEdges(filter);
 
       this.courseTitle = this.courseTitleLookup.get(this.service.getTitle(filter));
+      this.personMetaData = this.service.getPersonMetaData(filter);
+      console.log(this.personMetaData);
     }
   }
 

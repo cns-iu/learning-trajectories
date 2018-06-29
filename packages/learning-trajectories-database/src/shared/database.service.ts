@@ -6,7 +6,8 @@ import 'rxjs/add/operator/delay';
 
 import { Filter } from './filter';
 import { CourseModule, Transition } from './trajectory';
-import { database } from './database';
+import { database } from '../ginda-data/database';
+import { PersonMetaData } from './person-metadata';
 
 
 @Injectable()
@@ -69,4 +70,17 @@ export class DatabaseService {
       );
     }
   }
+
+  getPersonMetaData(filter: Partial<Filter> = {}) : Observable<PersonMetaData> {
+    if (filter.personName && database.linearNetworks.has(filter.personName)) {
+      return Observable.of(
+        database.linearNetworks.get(filter.personName).first().metadata
+      );
+    } else {
+      return Observable.of(
+        database.linearNetworks.get(database.linearNetworks.keySeq().first()).first().metadata
+      );
+    }
+  }
+
 }

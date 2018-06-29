@@ -8,8 +8,7 @@ import { access } from '@ngx-dino/core/src/operators/methods/extracting/access';
 import { chain } from '@ngx-dino/core/src/operators/methods/grouping/chain';
 import { map } from '@ngx-dino/core/src/operators/methods/transforming/map';
 
-import { Filter, DatabaseService } from 'learning-trajectories-database';
-
+import { Filter, DatabaseService, PersonMetaData } from 'learning-trajectories-database';
 
 @Injectable()
 export class VisualizationDataService {
@@ -91,5 +90,11 @@ export class VisualizationDataService {
     let title: string;
     this.database.getCourseTitle(filter).subscribe((t) => title = t);
     return title;
+  }
+
+  getPersonMetaData(filter: Partial<Filter> = {}): PersonMetaData {
+    let personMetaData: PersonMetaData;
+    this.database.getPersonMetaData(filter).subscribe((m) => personMetaData = m);
+    return personMetaData;
   }
 }

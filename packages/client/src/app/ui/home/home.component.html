@@ -1,6 +1,14 @@
 <mat-toolbar class="toolbar z-depth-1-half">
   <mat-icon class="hamburger" (click)="sidenav.toggle()">menu</mat-icon>
-  <span>Learning Trajectories: {{ wrapper.courseTitle }} - {{ selector.selectedName }}</span>
+  <div class="person-metadata">
+    <span>Learning Trajectories: {{ wrapper.courseTitle }} </span>
+    <span> Name: {{ selector.selectedName }} |
+      Grade: {{ wrapper.personMetaData.grade }} |
+      Gender: {{ wrapper.personMetaData.gender }} |
+      Level Of Education: {{ wrapper.personMetaData.levelOfEducation }} |
+      Born: {{ wrapper.personMetaData.born }}
+    </span>
+  </div>
   <img id="cns-logo" src="assets/cns-logo.png" title="Cyberinfrastructure for Network Science Center">
 </mat-toolbar>
 

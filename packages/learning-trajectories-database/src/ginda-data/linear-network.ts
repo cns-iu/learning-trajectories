@@ -1,4 +1,5 @@
-import { CourseModule, Transition } from './trajectory';
+import { CourseModule, Transition } from '../shared/trajectory';
+import { PersonMetaData, genderMapping, levelOfEducationMapping } from '../shared/person-metadata';
 import { List, Map } from 'immutable';
 
 export class LinearNetwork {
@@ -6,13 +7,15 @@ export class LinearNetwork {
   readonly rawPersonName: string;
   readonly nodes: CourseModule[];
   readonly edges: Transition[];
+  readonly metadata: PersonMetaData;
   private moduleIdToName: Map<string, CourseModule> = Map();
 
-  constructor (rawPerson: any) {
+  constructor (private rawPerson: any, private filteredMetaDataEntry: any) {
     this.directed = rawPerson.directed[0] as string;
     this.rawPersonName = rawPerson.name[0] as string;
     this.nodes =  (rawPerson.vertices || []).map((m) => this.getNode(m)).filter((m) => m.events > 0);
     this.edges = (rawPerson.edges || []).map((e) => this.getEdge(e));
+    this.metadata = this.getPersonMetaData();
     this.postProcessEdges(this.edges);
   }
 
@@ -77,6 +80,15 @@ export class LinearNetwork {
     } as Transition;
 
     return courseTransition;
+  }
+
+  getPersonMetaData(): PersonMetaData {
+    return {
+      grade: this.filteredMetaDataEntry.grade || '', // TODO  construct lookup
+      gender: genderMapping.get(this.filteredMetaDataEntry.gender) || '',
+      levelOfEducation: levelOfEducationMapping.get(this.filteredMetaDataEntry.loe) || '',
+      born: this.filteredMetaDataEntry.yob || ''
+    } as PersonMetaData;
   }
 
   private postProcessEdges(edges: Transition[]): void {
