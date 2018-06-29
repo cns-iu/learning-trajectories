@@ -84,7 +84,7 @@ export class LinearNetwork {
 
   getPersonMetaData(): PersonMetaData {
     return {
-      grade: this.filteredMetaDataEntry.grade || '', // TODO  construct lookup
+      grade: (this.filteredMetaDataEntry.grade * 100).toString() + '%',
       gender: genderMapping.get(this.filteredMetaDataEntry.gender) || '',
       levelOfEducation: levelOfEducationMapping.get(this.filteredMetaDataEntry.loe) || '',
       born: this.filteredMetaDataEntry.yob || ''
