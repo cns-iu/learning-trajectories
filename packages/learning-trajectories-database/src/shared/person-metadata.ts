@@ -17,8 +17,8 @@ export const levelOfEducationMapping = Map({
   'hs': 'High School',
   'b': 'Bachelor\'s',
   'm': 'Master\'s',
-  'p': '', // TODO
-  'a': '', // TODO
+  'p': 'PhD',
+  'a': 'Associate\'s',
   'other': 'Other',
   'none': 'None'
 });
