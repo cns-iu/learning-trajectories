@@ -53,8 +53,6 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
 
     this.personMetaData = service.getPersonMetaData();
 
-    console.log(this.personMetaData);
-
     const combinedFields = assign({}, fields, pick(service, [
       'nodeWeightField', 'edgeWeightField', 'edgeColorField'
     ]));
@@ -95,7 +93,6 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
 
       this.courseTitle = this.courseTitleLookup.get(this.service.getTitle(filter));
       this.personMetaData = this.service.getPersonMetaData(filter);
-      console.log(this.personMetaData);
     }
   }
 
