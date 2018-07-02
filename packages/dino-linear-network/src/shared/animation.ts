@@ -84,12 +84,6 @@ export class EdgeAnimator {
       this.currentAnimation.play();
     } else if (direction === 'backward') {
       this.forward = false;
-      if (!this.currentAnimation) {
-        const element = this.elements.last.nativeElement as SVGPathElement;
-        const index = this.elements.length;
-        this.startElement(element, index);
-      }
-
       this.currentAnimation.reverse();
       this.currentAnimation.play();
     }
