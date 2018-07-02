@@ -1,5 +1,5 @@
 <div class="animationControls">
-    <button mat-icon-button>
+    <button mat-icon-button (click)="onStepToggle('backward')">
         <mat-icon>
           fast_rewind
         </mat-icon>
@@ -14,7 +14,7 @@
           stop
         </mat-icon>
     </button>
-    <button mat-icon-button>
+    <button mat-icon-button (click)="onStepToggle('forward')">
         <mat-icon>
           fast_forward
         </mat-icon>

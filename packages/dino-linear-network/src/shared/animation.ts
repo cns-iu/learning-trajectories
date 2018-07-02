@@ -8,6 +8,7 @@ export class EdgeAnimator {
   private state: 'stopped' | 'running' | 'paused' = 'stopped';
   private totalLength = -1;
   private currentAnimation: any;
+  private forward = true;
   public duration: number;
   readonly events = new Subject<AnimationEvent>();
 
@@ -23,12 +24,15 @@ export class EdgeAnimator {
         break;
 
       case 'paused':
-        this.currentAnimation.play();
         this.state = 'running';
+        this.forward = true;
+        this.currentAnimation.play();
         this.events.next('start');
         break;
 
       case 'stopped':
+        this.state = 'running';
+        this.forward = true;
         this.totalLength = 0;
         this.elements.forEach((e, index) => {
           const element = e.nativeElement as SVGPathElement;
@@ -41,7 +45,6 @@ export class EdgeAnimator {
           this.startElement(this.elements.first.nativeElement, 0);
         }
 
-        this.state = 'running';
         this.events.next('start');
         break;
     }
@@ -71,14 +74,45 @@ export class EdgeAnimator {
     });
   }
 
-  onAnimationEnd(index: number, event: any): any {
-    const elements = this.elements.map((e) => e.nativeElement as Element);
-    this.removeAttributes(elements[index]);
+  step(direction: 'forward' | 'backward'): void {
+    if (this.state !== 'paused') {
+      return;
+    }
 
-    if (index + 1 === elements.length) {
-      this.stop();
+    if (direction === 'forward') {
+      this.forward = true;
+      this.currentAnimation.play();
+    } else if (direction === 'backward') {
+      this.forward = false;
+      if (!this.currentAnimation) {
+        const element = this.elements.last.nativeElement as SVGPathElement;
+        const index = this.elements.length;
+        this.startElement(element, index);
+      }
+
+      this.currentAnimation.reverse();
+      this.currentAnimation.play();
+    }
+  }
+
+  onAnimationEnd(index: number, event: any): any {
+    const forward = this.forward;
+    const elements = this.elements.map((e) => e.nativeElement as Element);
+    const element = elements[index] as SVGPathElement;
+    const nextIndex = forward ? index + 1 : index - 1;
+    if (forward) {
+      this.removeAttributes(element);
     } else {
-      this.startElement(elements[index + 1] as SVGPathElement, index + 1);
+      const length = element.getTotalLength();
+      this.setAttributes(element, length, length);
+    }
+
+    if (nextIndex === elements.length) {
+      this.stop();
+    } else if (nextIndex === -1) {
+      this.pause();
+    } else {
+      this.startElement(elements[nextIndex] as SVGPathElement, nextIndex);
     }
   }
 
@@ -98,14 +132,17 @@ export class EdgeAnimator {
   private startElement(element: SVGPathElement, index: number): void {
     const length = element.getTotalLength();
     const fraction = length / this.totalLength;
-    const duration = 1000 * fraction * this.duration;
+    const duration = 250; // 1000 * fraction * this.duration;
     const keyframes = [{
       strokeDashoffset: length
     }, {
       strokeDashoffset: 0
     }];
 
-    this.currentAnimation = (element as any).animate(keyframes, duration);
+    this.currentAnimation = (element as any).animate(keyframes, {duration});
     this.currentAnimation.onfinish = this.onAnimationEnd.bind(this, index);
+    if (this.state !== 'running') {
+      this.currentAnimation.pause();
+    }
   }
 }

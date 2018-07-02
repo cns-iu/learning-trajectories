@@ -81,6 +81,11 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
           case 'stop':
             this.vis.stopEdgeAnimation();
             break;
+
+          case 'forward':
+          case 'backward':
+            this.vis.stepEdgeAnimation(event);
+            break;
         }
       });
     }

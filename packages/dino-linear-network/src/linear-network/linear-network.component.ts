@@ -183,6 +183,12 @@ export class LinearNetworkComponent implements OnInit, AfterViewInit, OnChanges,
     }
   }
 
+  stepEdgeAnimation(direction: 'forward' | 'backward'): void {
+    if (this.animEdgeState) {
+      this.animEdgeState.step(direction);
+    }
+  }
+
 
   private getStreamMap() /* : Record<...> */ {
     return {

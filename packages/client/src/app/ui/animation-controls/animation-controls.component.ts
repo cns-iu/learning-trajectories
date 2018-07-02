@@ -40,4 +40,8 @@ export class AnimationControlsComponent implements OnInit {
     this.playPauseIcon = 'play_arrow';
     this.changeDetector.detectChanges();
   }
+
+  onStepToggle(direction: 'forward' | 'backward'): void {
+    this.selectedControl.next(direction);
+  }
 }
