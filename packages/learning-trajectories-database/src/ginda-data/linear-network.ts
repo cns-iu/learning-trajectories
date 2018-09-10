@@ -13,7 +13,7 @@ export class LinearNetwork {
   constructor (private rawPerson: any, private filteredMetaDataEntry: any) {
     this.directed = rawPerson.directed[0] as string;
     this.rawPersonName = rawPerson.name[0] as string;
-    this.nodes =  (rawPerson.vertices || []).map((m) => this.getNode(m)).filter((m) => m.events > 0);
+    this.nodes =  (rawPerson.vertices || []).map((m) => this.getNode(m));
     this.edges = (rawPerson.edges || []).map((e) => this.getEdge(e));
     this.metadata = this.getPersonMetaData();
     this.postProcessEdges(this.edges);

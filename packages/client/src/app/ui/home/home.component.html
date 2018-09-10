@@ -1,27 +1,22 @@
 <mat-toolbar class="toolbar z-depth-1-half">
-  <mat-icon class="hamburger" (click)="sidenav.toggle()">menu</mat-icon>
-  <span> Learning Trajectories </span>
-  <img id="cns-logo" src="assets/cns-logo.png" title="Cyberinfrastructure for Network Science Center">
+    <mat-icon class="hamburger" (click)="sidenav.toggle()">menu</mat-icon>
+    <span> Learning Trajectories </span>
+    <img id="cns-logo" src="assets/cns-logo.png" title="Cyberinfrastructure for Network Science Center">
 </mat-toolbar>
 
 <mat-sidenav-container>
-  <mat-sidenav #sidenav mode="side"
-    [opened] = "true"
-    class="sidenav-container"
-    (openedChange)="openState=$event">
-      
+    <mat-sidenav #sidenav mode="side" [opened]="true" class="sidenav-container" (openedChange)="openState=$event">
+
       <app-person-selector #selector></app-person-selector>
+      <mat-slide-toggle labelPosition="before" (change)="includeUnused = $event.checked">Show/Hide Unused Nodes</mat-slide-toggle>
 
       <p class="sidenav-title">Animation Controls</p>
       <hr>
-      <app-animation-controls #controls>
-      </app-animation-controls>
+      <app-animation-controls #controls></app-animation-controls>
 
       <p class="sidenav-title legend">Legend</p>
       <hr>
-      <app-visualization-legends #legend
-        [personSelected]="selector.selectedId">
-      </app-visualization-legends>
+      <app-visualization-legends #legend [personSelected]="selector.selectedId"></app-visualization-legends>
   </mat-sidenav>
 
   <mat-sidenav-content>
@@ -43,10 +38,11 @@
       </tr>
     </table>
 
-    <app-visualization-wrapper #wrapper
+    <app-visualization-wrapper #wrapper 
       [selectedControl]="controls.selectedControl"
       [personSelected]="selector.selectedId"
       [overflow]="false"
+      [includeUnused]="includeUnused"
       (animationEvents)="$event === 'stop' && controls.onStop()"
       (nodeSizeFactorChange)="legend.onNodeSizeFactorChange($event)">
     </app-visualization-wrapper>

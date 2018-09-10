@@ -16,16 +16,19 @@ export class DatabaseService {
   constructor() { }
 
   getNodes(filter: Partial<Filter> = {}): Observable<CourseModule[]> {
+    let nodes: CourseModule[];
     if (filter.personName && database.linearNetworks.has(filter.personName)) {
       // TODO 'course-filter', right now it returns the nodes for the first course taken
-      return Observable.of(
-        database.linearNetworks.get(filter.personName).first().nodes
-        ).delay(1);
+      nodes = database.linearNetworks.get(filter.personName).first().nodes;
     } else {
-      return Observable.of(
-        database.linearNetworks.get(database.linearNetworks.keySeq().first()).first().nodes
-      ).delay(1);
+      nodes = database.linearNetworks.get(database.linearNetworks.keySeq().first()).first().nodes;
     }
+
+    if (!filter.includeUnused) {
+      nodes = nodes.filter((n) => n.events > 0);
+    }
+
+    return Observable.of(nodes).delay(1);
   }
 
   getEdges(filter: Partial<Filter> = {}): Observable<Transition[]> {
