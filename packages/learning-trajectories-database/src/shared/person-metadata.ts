@@ -22,4 +22,3 @@ export const levelOfEducationMapping = Map({
   'other': 'Other',
   'none': 'None'
 });
-

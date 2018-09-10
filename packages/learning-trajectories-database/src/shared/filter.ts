@@ -1,4 +1,10 @@
 export interface Filter {
   personName: string;
-  includeUnused?: boolean;
+  includeUnused: boolean;
+}
+
+export interface MetaFilter {
+  age: [number, number];
+  grade: [number, number];
+  education: string;
 }
