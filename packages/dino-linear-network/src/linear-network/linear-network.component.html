@@ -14,22 +14,22 @@
 
   <g class="edge-group">
     <path #edges
-        *ngFor="let edge of edges; let index = index; trackBy: trackByEdge"
-        [matTooltip]="edge.tooltip"
-        [matTooltipPosition]="edgeTooltipPosition(edge)"
-        [attr.d]="edge.path"
-        [style.stroke]="edge.color"
-        [style.stroke-width]="3.5 * edge.weight">
+      *ngFor="let edge of edges; let index = index; trackBy: trackByEdge"
+      [matTooltip]="edge.tooltip"
+      [matTooltipPosition]="edgeTooltipPosition(edge)"
+      [attr.d]="edge.path"
+      [style.stroke]="edge.color"
+      [style.stroke-width]="3.5 * edge.weight">
     </path>
   </g>
 
   <g class="node-group">
     <circle *ngFor="let node of nodes; trackBy: trackByNode"
-        [matTooltip]="node.tooltip" [matTooltipPosition]="'above'"
-        [attr.r]="node.radius"
-        [attr.cx]="node.x"
-        [attr.cy]="height / 2"
-        [style.fill]='node.color'>
+      [matTooltip]="node.tooltip" [matTooltipPosition]="'above'"
+      [attr.r]="node.radius"
+      [attr.cx]="node.x"
+      [attr.cy]="height / 2"
+      [style.fill]='node.color'>
     </circle>
   </g>
 </svg>
