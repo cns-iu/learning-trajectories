@@ -16,7 +16,7 @@ import { PersonSelectorDataService } from './shared/person-selector-data.service
 @NgModule({
   imports: [
     CommonModule,
-  
+
     SharedModule,
     VisualizationModule
   ],

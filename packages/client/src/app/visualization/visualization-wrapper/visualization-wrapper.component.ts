@@ -27,6 +27,7 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
   @Input() selectedControl: Observable<string>;
   @Input() personSelected: string;
   @Input() overflow = false; // visualization page overflow toggle
+  @Input() includeUnused = false; // Show nodes with no edges
 
   @Output() animationEvents = new Subject<string>();
   @Output() nodeSizeFactorChange = new EventEmitter<number>();
@@ -90,8 +91,11 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
       });
     }
 
-    if ('personSelected' in changes) {
-      const filter = {personName: changes.personSelected.currentValue};
+    if ('personSelected' in changes || 'includeUnused' in changes) {
+      const filter = {
+        personName: this.personSelected,
+        includeUnused: this.includeUnused
+      };
 
       this.nodeStream = this.service.getNodes(filter);
       this.edgeStream = this.service.getEdges(filter);
