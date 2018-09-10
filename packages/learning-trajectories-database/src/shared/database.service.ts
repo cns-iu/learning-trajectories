@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 
-import { Filter } from './filter';
+import { Filter, MetaFilter } from './filter';
 import { CourseModule, Transition } from './trajectory';
 import { database } from '../ginda-data/database';
 import { PersonMetaData } from './person-metadata';
@@ -57,8 +57,30 @@ export class DatabaseService {
     }
   }
 
-  getPersonNames(): Observable<string[]>{
-    return Observable.of(database.linearNetworks.keySeq().toArray());
+  getPersonNames(filter: Partial<MetaFilter> = {}): Observable<string[]>{
+    let filtered = database.linearNetworks.map((value) => value.first());
+    if (filter.education) {
+      const education = filter.education;
+      filtered = filtered.filter((network) => {
+        return network.metadata.levelOfEducation === education;
+      });
+    }
+    if (filter.age) {
+      const [min, max] = filter.age;
+      filtered = filtered.filter((network) => {
+        const age = network.metadata.born;
+        return min <= age && age <= max;
+      });
+    }
+    if (filter.grade) {
+      const [min, max] = filter.grade;
+      filtered = filtered.filter((network) => {
+        const grade = Number(network.metadata.grade.slice(0, -1));
+        return min <= grade && grade <= max;
+      });
+    }
+
+    return Observable.of(filtered.keySeq().toArray());
   }
 
   getCourseTitle(filter: Partial<Filter> = {}): Observable<string> {
