@@ -6,11 +6,16 @@
   font-family: $r-mono
   color: $white
   background-color: #3D3D3D
+  height: 35px
+  font-size: 15px
+
+app-visualization-wrapper
+  height: calc(100% - 112px)
 
 mat-sidenav-container
   position: fixed
   width: 100%
-  height: calc(100% - 64px)
+  height: calc(100% - 34px)
 
 mat-sidenav-content
   .person-metadata
@@ -32,6 +37,9 @@ mat-sidenav-content
       background: #f5f5f5
       padding: 5px
       font-weight: bold
+      margin-left: 5px
+      margin-right: 5px
+      margin-top: 5px
 
 
 .sidenav-container
@@ -54,10 +62,8 @@ mat-sidenav-content
   cursor: pointer
   padding-right: 16px // mat-toolbar-row injects a padding-left of 16px
 
-#cns-logo
+.cns-logo
   position: absolute
   right: 5px
-  height: 54px
-
-app-visualization-wrapper
-  height: calc(100% - 120px)
+  height: 30px
+  width: 70px
