@@ -12,6 +12,28 @@ mat-sidenav-container
   width: 100%
   height: calc(100% - 64px)
 
+mat-sidenav-content
+  .person-metadata
+    height: 102px
+    
+    .metadata
+      background: #f5f5f5
+      border-collapse: collapse
+      width: calc(100% - 8px)
+      margin-left: 4px
+      margin-right: 4px
+      td, th
+        text-align: center
+        width: auto
+        padding: 10px
+        border: 1px solid white
+
+    .course-title
+      background: #f5f5f5
+      padding: 5px
+      font-weight: bold
+
+
 .sidenav-container
   width: 340px
   padding: 20px
@@ -37,19 +59,5 @@ mat-sidenav-container
   right: 5px
   height: 54px
 
-.person-metadata
-  background: #f5f5f5
-  border-collapse: collapse
-  width: calc(100% - 10px)
-  margin-left: 5px
-  margin-right: 5px
-  td, th
-    text-align: center
-    width: auto
-    padding: 10px
-    border: 1px solid white
-
-.person-metadata-heading
-  background: #f5f5f5
-  padding: 5px
-  font-weight: bold
+app-visualization-wrapper
+  height: calc(100% - 120px)

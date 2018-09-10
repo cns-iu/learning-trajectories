@@ -20,23 +20,25 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <div class="person-metadata-heading">{{ wrapper.courseTitle }}</div>
-    <table class="person-metadata">
-      <tr>
-        <th>Name</th>
-        <th>Grade</th>
-        <th>Gender</th>
-        <th>Level of Education</th>
-        <th>Born</th>
-      </tr>
-      <tr>
-        <td align="center">{{ selector.selectedName }} </td>
-        <td >{{ wrapper.personMetaData.grade }} </td>
-        <td>{{ wrapper.personMetaData.gender }} </td>
-        <td>{{ wrapper.personMetaData.levelOfEducation }} </td>
-        <td>{{ wrapper.personMetaData.born }} </td>
-      </tr>
-    </table>
+    <div class="person-metadata">
+      <div class="course-title">{{ wrapper.courseTitle }}</div>
+      <table class="metadata">
+        <tr>
+          <th>Name</th>
+          <th>Grade</th>
+          <th>Gender</th>
+          <th>Level of Education</th>
+          <th>Born</th>
+        </tr>
+        <tr>
+          <td align="center">{{ selector.selectedName }} </td>
+          <td >{{ wrapper.personMetaData.grade }} </td>
+          <td>{{ wrapper.personMetaData.gender }} </td>
+          <td>{{ wrapper.personMetaData.levelOfEducation }} </td>
+          <td>{{ wrapper.personMetaData.born }} </td>
+        </tr>
+      </table>
+    </div>
 
     <app-visualization-wrapper #wrapper 
       [selectedControl]="controls.selectedControl"
