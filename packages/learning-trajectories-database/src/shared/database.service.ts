@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/delay';
 
 import { Filter, MetaFilter } from './filter';
@@ -102,9 +103,9 @@ export class DatabaseService {
         database.linearNetworks.get(filter.personName).first().metadata
       );
     } else {
-      return Observable.of(
-        database.linearNetworks.get(database.linearNetworks.keySeq().first()).first().metadata
-      );
+      const data = database.linearNetworks.valueSeq().map((map) => map.first());
+      const metadata = data.map((item) => item.metadata);
+      return Observable.from(metadata.toArray());
     }
   }
 
