@@ -1,11 +1,11 @@
 <svg #container [attr.width]="overflow ? width : '100%'">
   <g>
-    <rect *ngFor="let entry of labels" 
+    <rect *ngFor="let entry of labels"
       [attr.x]="entry[1][0]"
-      [attr.width]="entry[1][1] - entry[1][0]" 
+      [attr.width]="entry[1][1] - entry[1][0]"
       [attr.height]="height"
       [style.fill]="'#f5f5f5'"/>
-      <text *ngFor="let entry of labels" 
+      <text *ngFor="let entry of labels"
         [style.font-size]="14"
         [attr.transform]="'translate('+(entry[1][0]+5)+', 10) rotate(90)'">
           {{entry[0]}}
@@ -17,6 +17,7 @@
       *ngFor="let edge of edges; let index = index; trackBy: trackByEdge"
       [matTooltip]="edge.tooltip"
       [matTooltipPosition]="edgeTooltipPosition(edge)"
+      [attr.order]="edge.order"
       [attr.d]="edge.path"
       [style.stroke]="edge.color"
       [style.stroke-width]="3.5 * edge.weight">

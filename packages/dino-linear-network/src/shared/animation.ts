@@ -5,6 +5,7 @@ import { Subject } from 'rxjs/Subject';
 export type AnimationEvent = 'start' | 'stop' | 'pause';
 
 export class EdgeAnimator {
+  private elements: SVGPathElement[] = [];
   private state: 'stopped' | 'running' | 'paused' = 'stopped';
   private totalLength = -1;
   private currentAnimation: any;
@@ -12,9 +13,11 @@ export class EdgeAnimator {
   public duration: number;
   readonly events = new Subject<AnimationEvent>();
 
-  constructor(private elements: QueryList<ElementRef>) {
-    elements.changes.subscribe(() => {
+  constructor(elementList: QueryList<ElementRef>) {
+    this.updateInitial(elementList);
+    elementList.changes.subscribe(() => {
       stop();
+      this.updateElements(elementList);
     });
   }
 
@@ -34,15 +37,14 @@ export class EdgeAnimator {
         this.state = 'running';
         this.forward = true;
         this.totalLength = 0;
-        this.elements.forEach((e, index) => {
-          const element = e.nativeElement as SVGPathElement;
+        this.elements.forEach((element, index) => {
           const length = element.getTotalLength();
           this.totalLength += length;
           this.setAttributes(element, length, length);
         });
 
         if (this.elements.length) {
-          this.startElement(this.elements.first.nativeElement, 0);
+          this.startElement(this.elements[0], 0);
         }
 
         this.events.next('start');
@@ -69,8 +71,8 @@ export class EdgeAnimator {
       this.events.next('stop');
     }
 
-    this.elements.forEach((e) => {
-      this.removeAttributes(e.nativeElement);
+    this.elements.forEach((element) => {
+      this.removeAttributes(element);
     });
   }
 
@@ -91,8 +93,8 @@ export class EdgeAnimator {
 
   onAnimationEnd(index: number, event: any): any {
     const forward = this.forward;
-    const elements = this.elements.map((e) => e.nativeElement as Element);
-    const element = elements[index] as SVGPathElement;
+    const elements = this.elements;
+    const element = elements[index];
     const nextIndex = forward ? index + 1 : index - 1;
     if (forward) {
       this.removeAttributes(element);
@@ -106,7 +108,7 @@ export class EdgeAnimator {
     } else if (nextIndex === -1) {
       this.pause();
     } else {
-      this.startElement(elements[nextIndex] as SVGPathElement, nextIndex);
+      this.startElement(elements[nextIndex], nextIndex);
     }
   }
 
@@ -121,6 +123,20 @@ export class EdgeAnimator {
     element.removeAttribute('animate');
     element.removeAttribute('stroke-dasharray');
     element.removeAttribute('stroke-dashoffset');
+  }
+
+  private updateInitial(elementList: QueryList<ElementRef>): void {
+    if (elementList.length === 0) {
+      setTimeout(this.updateInitial.bind(this, elementList), 500);
+    }
+    this.updateElements(elementList);
+  }
+
+  private updateElements(elementList: QueryList<ElementRef>): void {
+    const orderOf = (element: SVGPathElement): number => Number(element.getAttribute('order'));
+    const sorter = (e1: SVGPathElement, e2: SVGPathElement): number => orderOf(e1) - orderOf(e2);
+    this.elements = elementList.map((e) => e.nativeElement as SVGPathElement);
+    this.elements.sort(sorter);
   }
 
   private startElement(element: SVGPathElement, index: number): void {
