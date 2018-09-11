@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 
 import { Map } from 'immutable';
 
-import { DatabaseService } from 'learning-trajectories-database';
+import { DatabaseService, Filter } from 'learning-trajectories-database';
 
 @Injectable()
-export class PersonSelectorDataService {
+export class InputSelectorDataService {
   personNameToId: Map<string, string>;
 
   constructor(private dataService: DatabaseService) {
@@ -22,5 +22,7 @@ export class PersonSelectorDataService {
     });
   }
 
-
+  getCourseIds(filter: Partial<Filter> = {}) {
+    return this.dataService.getCourseIds(filter);
+  }
 }

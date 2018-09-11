@@ -1,0 +1,7 @@
+<mat-form-field class="courseSelector">
+    <mat-select placeholder="Select Course" [(value)]="selectedCourseId">
+      <mat-option *ngFor="let courseId of courseIds" [value]="courseId">
+        {{ courseTitleLookup.get(courseId) }}
+      </mat-option>
+    </mat-select>
+</mat-form-field>

@@ -86,12 +86,6 @@ export class VisualizationDataService {
     }).map(RawChangeSet.fromArray);
   }
 
-  getTitle(filter: Partial<Filter> = {}): string {
-    let title: string;
-    this.database.getCourseTitle(filter).subscribe((t) => title = t);
-    return title;
-  }
-
   getPersonMetaData(filter: Partial<Filter> = {}): PersonMetaData {
     let personMetaData: PersonMetaData;
     this.database.getPersonMetaData(filter).subscribe((m) => personMetaData = m);

@@ -83,15 +83,15 @@ export class DatabaseService {
     return Observable.of(filtered.keySeq().toArray());
   }
 
-  getCourseTitle(filter: Partial<Filter> = {}): Observable<string> {
+  getCourseIds(filter: Partial<Filter> = {}): Observable<string[]> {
     if (filter.personName && database.linearNetworks.has(filter.personName)) {
       return Observable.of(
-        database.linearNetworks.get(filter.personName).keySeq().first().toString()
+        database.linearNetworks.get(filter.personName).keySeq().toArray()
       );
     } else {
       return Observable.of(
         database.linearNetworks.get(database.linearNetworks.keySeq().first())
-        .keySeq().first().toString()
+        .keySeq().toArray()
       );
     }
   }

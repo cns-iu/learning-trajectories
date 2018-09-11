@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Map } from 'immutable';
 
-import { PersonSelectorDataService } from '../shared/person-selector-data.service';
+import { InputSelectorDataService } from '../shared/input-selector-data.service';
 
 @Component({
   selector: 'app-person-selector',
@@ -19,7 +19,7 @@ export class PersonSelectorComponent implements OnInit {
     return this.personNameToId.keyOf(this.selectedId);
   }
 
-  constructor(private dataService: PersonSelectorDataService) {
+  constructor(private dataService: InputSelectorDataService) {
     this.personNameToId = this.dataService.personNameToId;
     this.persons = this.personNameToId.keySeq().toArray();
     this.selectedId = this.personNameToId.get(this.persons[1]);
