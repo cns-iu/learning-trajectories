@@ -1,2 +1,34 @@
+@import "~nouislider/distribute/nouislider"
+
+.educationSelector,
 .personSelector
   width: 300px
+
+.slider-container
+  .age-slider,
+  .grade-slider
+    padding-bottom: 30px
+
+  .noUi-target
+    padding: 0 17px
+
+  .noUi-base::before,
+  .noUi-base::after
+    padding: 17px
+    content: ''
+    position: absolute
+    top: 0
+    height: 100%
+    display: block
+
+  .noUi-base::before
+    left: -17px
+
+  .noUi-base::after
+    left: 100%
+
+  .noUi-connect
+    background: #455a64
+
+  .noUi-tooltip
+    bottom: -130%
