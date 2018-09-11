@@ -6,13 +6,14 @@
 
 <mat-sidenav-container>
   <mat-sidenav #sidenav mode="side" class="sidenav-container" [opened]="true" (openedChange)="openState=$event">
+    <app-course-selector [personName]="personSelector.selectedName" #courseSelector></app-course-selector>
+    <app-person-selector #personSelector></app-person-selector>
 
+    <p class="sidenav-title">Visualization Controls</p>
+    <hr>
     <mat-slide-toggle labelPosition="before" (change)="includeUnused = $event.checked" class="node-toggle">
       Show/Hide Unused Nodes
     </mat-slide-toggle>
-    
-    <app-person-selector #personSelector></app-person-selector>
-    <app-course-selector [personName]="personSelector.selectedName" #courseSelector></app-course-selector>
 
     <p class="sidenav-title">Animation Controls</p>
     <hr>

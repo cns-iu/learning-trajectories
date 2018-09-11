@@ -1,3 +1,13 @@
+<mat-form-field class="personSelector">
+    <mat-select placeholder="Select Person" [(value)]="selectedId">
+        <mat-option *ngFor="let person of persons" [value]="personNameToId.get(person)">
+            {{ person }}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+
+<p class="sidenav-title">Filter Person List</p>
+<hr>
 <div class="slider-container">
     <h3>Age</h3>
     <nouislider #ageSlider class="age-slider" [config]="ageSliderConfig" (change)="onAgeChange($event)"></nouislider>
@@ -9,13 +19,6 @@
         <mat-option></mat-option>
         <mat-option *ngFor="let ed of educations" [value]="ed">
             {{ ed }}
-        </mat-option>
-    </mat-select>
-</mat-form-field>
-<mat-form-field class="personSelector">
-    <mat-select placeholder="Select Person" [(value)]="selectedId">
-        <mat-option *ngFor="let person of persons" [value]="personNameToId.get(person)">
-            {{ person }}
         </mat-option>
     </mat-select>
 </mat-form-field>
