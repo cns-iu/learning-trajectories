@@ -8,8 +8,6 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { throttle } from 'lodash';
 
-import { Map } from 'immutable';
-
 import {
   BoundField,
   DatumId, idSymbol,
@@ -79,6 +77,9 @@ export class LinearNetworkComponent implements OnInit, AfterViewInit, OnChanges,
   @Input() animDuration = 5; // In seconds
   @Output() animEvents = new Subject<AnimationEvent>();
   private animEdgeState: EdgeAnimator;
+
+  // IE detection
+  readonly isIE = false || (document && !!(document as any).documentMode);
 
 
   constructor(private service: LinearNetworkLayoutService) {

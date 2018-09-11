@@ -4,33 +4,57 @@
       [attr.x]="entry[1][0]"
       [attr.width]="entry[1][1] - entry[1][0]"
       [attr.height]="height"
-      [style.fill]="'#f5f5f5'"/>
-      <text *ngFor="let entry of labels"
-        [style.font-size]="14"
-        [attr.transform]="'translate('+(entry[1][0]+5)+', 10) rotate(90)'">
-          {{entry[0]}}
-      </text>
+      [style.fill]="'#f5f5f5'">
+    </rect>
+    <text *ngFor="let entry of labels"
+      [style.font-size]="14"
+      [attr.transform]="'translate('+(entry[1][0]+5)+', 10) rotate(90)'">
+        {{entry[0]}}
+    </text>
   </g>
 
-  <g class="edge-group">
-    <path #edges
-      *ngFor="let edge of edges; let index = index; trackBy: trackByEdge"
-      [matTooltip]="edge.tooltip"
-      [matTooltipPosition]="edgeTooltipPosition(edge)"
-      [attr.order]="edge.order"
-      [attr.d]="edge.path"
-      [style.stroke]="edge.color"
-      [style.stroke-width]="3.5 * edge.weight">
-    </path>
-  </g>
+  <g *ngIf="!isIE; else IE">
+    <g class="edge-group">
+      <path #edges
+        *ngFor="let edge of edges; let index = index; trackBy: trackByEdge"
+        [matTooltip]="edge.tooltip"
+        [matTooltipPosition]="edgeTooltipPosition(edge)"
+        [attr.order]="edge.order"
+        [attr.d]="edge.path"
+        [style.stroke]="edge.color"
+        [style.stroke-width]="3.5 * edge.weight">
+      </path>
+    </g>
 
-  <g class="node-group">
-    <circle *ngFor="let node of nodes; trackBy: trackByNode"
-      [matTooltip]="node.tooltip" [matTooltipPosition]="'above'"
-      [attr.r]="node.radius"
-      [attr.cx]="node.x"
-      [attr.cy]="height / 2"
-      [style.fill]='node.color'>
-    </circle>
+    <g class="node-group">
+      <circle *ngFor="let node of nodes; trackBy: trackByNode"
+        [matTooltip]="node.tooltip"
+        [matTooltipPosition]="'above'"
+        [attr.r]="node.radius"
+        [attr.cx]="node.x"
+        [attr.cy]="height / 2"
+        [style.fill]='node.color'>
+      </circle>
+    </g>
   </g>
+  <ng-template #IE>
+      <g class="edge-group">
+          <path #edges
+            *ngFor="let edge of edges; let index = index; trackBy: trackByEdge"
+            [attr.order]="edge.order"
+            [attr.d]="edge.path"
+            [style.stroke]="edge.color"
+            [style.stroke-width]="3.5 * edge.weight">
+          </path>
+        </g>
+
+        <g class="node-group">
+          <circle *ngFor="let node of nodes; trackBy: trackByNode"
+            [attr.r]="node.radius"
+            [attr.cx]="node.x"
+            [attr.cy]="height / 2"
+            [style.fill]='node.color'>
+          </circle>
+        </g>
+  </ng-template>
 </svg>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material';
+import 'hammerjs';
 
 import { LinearNetworkComponent } from './linear-network/linear-network.component';
 
