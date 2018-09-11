@@ -2,8 +2,8 @@ import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { Map } from 'immutable';
 import { NouisliderComponent } from 'ng2-nouislider';
 
-import { PersonSelectorDataService } from '../shared/person-selector-data.service';
 import { MetaFilter } from 'learning-trajectories-database';
+import { InputSelectorDataService } from '../shared/input-selector-data.service';
 
 @Component({
   selector: 'app-person-selector',
@@ -61,7 +61,7 @@ export class PersonSelectorComponent implements OnInit {
     return this.personNameToId.keyOf(this.selectedId);
   }
 
-  constructor(private dataService: PersonSelectorDataService) {
+  constructor(private dataService: InputSelectorDataService) {
     dataService.mapping.subscribe((map) => {
       const oldMap = this.personNameToId;
       this.personNameToId = map;

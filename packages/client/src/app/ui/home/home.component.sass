@@ -8,6 +8,15 @@
   background-color: #3D3D3D
   height: 35px
   font-size: 15px
+  .hamburger
+    cursor: pointer
+    padding-right: 16px // mat-toolbar-row injects a padding-left of 16px
+
+  .cns-logo
+    position: absolute
+    right: 5px
+    height: 30px
+    width: 70px
 
 app-visualization-wrapper
   height: calc(100% - 112px)
@@ -47,23 +56,17 @@ mat-sidenav-content
   padding: 20px
   overflow-x: hidden
 
-.sidenav-title
-  display: flex
-  flex-direction: row
-  align-items: center
-  justify-content: center
-  font-weight: bolder
-  padding-top: 10px
+  .sidenav-title
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: center
+    font-weight: bolder
+    padding-top: 10px
 
-.legend
-  padding-top: 10px
+  .legend
+    padding-top: 10px
 
-.hamburger
-  cursor: pointer
-  padding-right: 16px // mat-toolbar-row injects a padding-left of 16px
-
-.cns-logo
-  position: absolute
-  right: 5px
-  height: 30px
-  width: 70px
+  .node-toggle
+    // padding-top: 1.25em
+    padding-bottom: 1.25em

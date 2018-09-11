@@ -6,7 +6,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeAll';
 import 'rxjs/add/operator/reduce';
 
-import { DatabaseService, MetaFilter } from 'learning-trajectories-database';
+import { DatabaseService, MetaFilter, Filter } from 'learning-trajectories-database';
 
 function displayName(id: string): string {
   const re = /(\D)(\D*)(\d*)/;
@@ -35,7 +35,7 @@ function updateRange(range: [number, number], value: number | string): [number, 
 }
 
 @Injectable()
-export class PersonSelectorDataService {
+export class InputSelectorDataService {
   readonly mapping: Observable<Map<string, string>>;
   readonly yearRange: Observable<[number, number]>;
   readonly education: Observable<string[]>;
@@ -59,5 +59,9 @@ export class PersonSelectorDataService {
     const names = this.dataService.getPersonNames(filter);
     const map = names.map(namesToMap);
     this.innerMapping.next(map);
+  }
+
+  getCourseIds(filter: Partial<Filter> = {}) {
+    return this.dataService.getCourseIds(filter);
   }
 }

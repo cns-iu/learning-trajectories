@@ -10,7 +10,8 @@ import { HomeComponent } from './home/home.component';
 import { PersonSelectorComponent } from './person-selector/person-selector.component';
 import { AnimationControlsComponent } from './animation-controls/animation-controls.component';
 
-import { PersonSelectorDataService } from './shared/person-selector-data.service';
+import { InputSelectorDataService } from './shared/input-selector-data.service';
+import { CourseSelectorComponent } from './course-selector/course-selector.component';
 
 
 @NgModule({
@@ -24,9 +25,9 @@ import { PersonSelectorDataService } from './shared/person-selector-data.service
     HomeComponent
   ],
   providers: [
-    PersonSelectorDataService,
+    InputSelectorDataService,
     DatabaseService
   ],
-  declarations: [HomeComponent, PersonSelectorComponent, AnimationControlsComponent]
+  declarations: [HomeComponent, PersonSelectorComponent, AnimationControlsComponent, CourseSelectorComponent]
 })
 export class UiModule { }

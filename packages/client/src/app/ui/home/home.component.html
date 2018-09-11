@@ -5,23 +5,28 @@
 </mat-toolbar>
 
 <mat-sidenav-container>
-    <mat-sidenav #sidenav mode="side" [opened]="true" class="sidenav-container" (openedChange)="openState=$event">
+  <mat-sidenav #sidenav mode="side" class="sidenav-container" [opened]="true" (openedChange)="openState=$event">
 
-      <app-person-selector #selector></app-person-selector>
-      <mat-slide-toggle labelPosition="before" (change)="includeUnused = $event.checked">Show/Hide Unused Nodes</mat-slide-toggle>
+    <mat-slide-toggle labelPosition="before" (change)="includeUnused = $event.checked" class="node-toggle">
+      Show/Hide Unused Nodes
+    </mat-slide-toggle>
+    
+    <app-person-selector #personSelector></app-person-selector>
+    <app-course-selector [personName]="personSelector.selectedName" #courseSelector></app-course-selector>
 
-      <p class="sidenav-title">Animation Controls</p>
-      <hr>
-      <app-animation-controls #controls></app-animation-controls>
+    <p class="sidenav-title">Animation Controls</p>
+    <hr>
+    <app-animation-controls #controls></app-animation-controls>
 
-      <p class="sidenav-title legend">Legend</p>
-      <hr>
-      <app-visualization-legends #legend [personSelected]="selector.selectedId"></app-visualization-legends>
+    <p class="sidenav-title legend">Legend</p>
+    <hr>
+    <app-visualization-legends [personSelected]="personSelector.selectedId" #legend>
+    </app-visualization-legends>
   </mat-sidenav>
 
   <mat-sidenav-content>
     <div class="person-metadata">
-      <div class="course-title">{{ wrapper.courseTitle }}</div>
+      <div class="course-title">{{ courseSelector.selectedCourse }}</div>
       <table class="metadata">
         <tr>
           <th>Name</th>
@@ -31,7 +36,7 @@
           <th>Born</th>
         </tr>
         <tr>
-          <td align="center">{{ selector.selectedName }} </td>
+          <td align="center">{{ personSelector.selectedName }} </td>
           <td >{{ wrapper.personMetaData.grade }} </td>
           <td>{{ wrapper.personMetaData.gender }} </td>
           <td>{{ wrapper.personMetaData.levelOfEducation }} </td>
@@ -42,7 +47,7 @@
 
     <app-visualization-wrapper #wrapper 
       [selectedControl]="controls.selectedControl"
-      [personSelected]="selector.selectedId"
+      [personSelected]="personSelector.selectedId"
       [overflow]="false"
       [includeUnused]="includeUnused"
       (animationEvents)="$event === 'stop' && controls.onStop()"

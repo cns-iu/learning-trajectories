@@ -1,9 +1,12 @@
 <div class="animationControls">
-    <button mat-icon-button (click)="onStepToggle('backward')">
-        <mat-icon>
-          fast_rewind
-        </mat-icon>
-    </button>
+    <div class="backward">
+        <button mat-icon-button (click)="onStepToggle('backward')">
+            <mat-icon>
+            fast_rewind
+            </mat-icon>
+        </button>
+        <span class="button-subtext">1 Step</span>
+    </div>
     <button mat-icon-button (click)="onPlayToggle()" >
         <mat-icon>
           {{playPauseIcon}}
@@ -14,9 +17,12 @@
           stop
         </mat-icon>
     </button>
-    <button mat-icon-button (click)="onStepToggle('forward')">
-        <mat-icon>
-          fast_forward
-        </mat-icon>
-    </button>
+    <div class="forward">
+        <button mat-icon-button (click)="onStepToggle('forward')">
+            <mat-icon>
+            fast_forward
+            </mat-icon>
+        </button>
+        <span class="button-subtext">1 Step</span>
+    </div>
 </div>
