@@ -78,9 +78,6 @@ export class LinearNetworkComponent implements OnInit, AfterViewInit, OnChanges,
   @Output() animEvents = new Subject<AnimationEvent>();
   private animEdgeState: EdgeAnimator;
 
-  // IE detection
-  readonly isIE = false || (document && !!(document as any).documentMode);
-
 
   constructor(private service: LinearNetworkLayoutService) {
     service.nodes.subscribe((nodes) => {
