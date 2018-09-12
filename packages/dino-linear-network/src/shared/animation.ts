@@ -15,10 +15,6 @@ export class EdgeAnimator {
 
   constructor(elementList: QueryList<ElementRef>) {
     this.updateInitial(elementList);
-    elementList.changes.subscribe(() => {
-      stop();
-      this.updateElements(elementList);
-    });
   }
 
   start(): void {
@@ -34,20 +30,19 @@ export class EdgeAnimator {
         break;
 
       case 'stopped':
-        this.state = 'running';
-        this.forward = true;
-        this.totalLength = 0;
-        this.elements.forEach((element, index) => {
-          const length = element.getTotalLength();
-          this.totalLength += length;
-          this.setAttributes(element, length, length);
-        });
-
         if (this.elements.length) {
-          this.startElement(this.elements[0], 0);
-        }
+          this.state = 'running';
+          this.forward = true;
+          this.totalLength = 0;
+          this.elements.forEach((element, index) => {
+            const length = element.getTotalLength();
+            this.totalLength += length;
+            this.setAttributes(element, length, length);
+          });
 
-        this.events.next('start');
+          this.startElement(this.elements[0], 0);
+          this.events.next('start');
+        }
         break;
     }
   }
@@ -129,7 +124,9 @@ export class EdgeAnimator {
     if (elementList.length === 0) {
       setTimeout(this.updateInitial.bind(this, elementList), 500);
     }
+
     this.updateElements(elementList);
+    elementList.changes.subscribe(() => (this.stop(), this.updateElements(elementList)));
   }
 
   private updateElements(elementList: QueryList<ElementRef>): void {
