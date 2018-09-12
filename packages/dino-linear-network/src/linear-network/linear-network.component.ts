@@ -8,8 +8,6 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { throttle } from 'lodash';
 
-import { Map } from 'immutable';
-
 import {
   BoundField,
   DatumId, idSymbol,
