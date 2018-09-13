@@ -2,6 +2,16 @@
 
 Changelog for the Learning Trajectories (LT) project.
 
+## 0.3.0 - 2018-09-14
+### Added in 0.3.0
+
+- Third release following Sprint 3
+- Updated the look and feel of the UI
+- Added filters for people by grade, age, and eductation
+- Added a new course and UI to choose between courses
+- Added feature to toggle display of unused/unvisited modules
+- Fixed bugs for IE11
+
 ## 0.0.2 - 2018-07-02
 ### Added
 

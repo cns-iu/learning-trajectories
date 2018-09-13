@@ -15,10 +15,10 @@ export const genderMapping = Map({
 
 export const levelOfEducationMapping = Map({
   'hs': 'High School',
-  'b': 'Bachelor\'s',
-  'm': 'Master\'s',
+  'b': 'Bachelors',
+  'm': 'Masters',
   'p': 'PhD',
-  'a': 'Associate\'s',
+  'a': 'Associates',
   'other': 'Other',
-  'none': 'None'
+  'none': 'None',
 });

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Map } from 'immutable';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -90,11 +91,12 @@ export class DatabaseService {
         database.linearNetworks.get(filter.personName).keySeq().toArray()
       );
     } else {
-      return Observable.of(
-        database.linearNetworks.get(database.linearNetworks.keySeq().first())
-        .keySeq().toArray()
-      );
+      return Observable.of(database.courseMetaData.keySeq().toArray());
     }
+  }
+
+  getCourseMetadata(): { [id: string]: any } {
+    return database.courseMetaData.toJS();
   }
 
   getPersonMetaData(filter: Partial<Filter> = {}) : Observable<PersonMetaData> {

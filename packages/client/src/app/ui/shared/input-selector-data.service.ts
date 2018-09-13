@@ -64,4 +64,8 @@ export class InputSelectorDataService {
   getCourseIds(filter: Partial<Filter> = {}) {
     return this.dataService.getCourseIds(filter);
   }
+
+  getCourseMetadata(): { [id: string]: any } {
+    return this.dataService.getCourseMetadata();
+  }
 }

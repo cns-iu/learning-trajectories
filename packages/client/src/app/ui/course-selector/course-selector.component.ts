@@ -12,7 +12,7 @@ import { InputSelectorDataService } from '../shared/input-selector-data.service'
 export class CourseSelectorComponent implements OnInit, OnChanges {
   @Input() personName: string;
 
-  courseTitleLookup: Map<string, string> = Map();
+  courseTitleLookup: Map<string, any> = Map();
 
   selectedCourseId: string;
   courseIds: string[] = [];
@@ -22,16 +22,14 @@ export class CourseSelectorComponent implements OnInit, OnChanges {
   }
 
   constructor(private dataService: InputSelectorDataService) {
-    this.courseTitleLookup = this.courseTitleLookup.set(
-      'MITProfessionalX+SysEngxB1+3T2016', 'Architecture of Complex Systems, Fall 2016'
-    ); // TODO
+     this.courseTitleLookup = Map(dataService.getCourseMetadata());
   }
 
   ngOnInit() {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if ('personName' in changes) {
+    if ('selectedCourseId' in changes || 'personName' in changes) {
       this.dataService.getCourseIds({personName: this.personName})
         .subscribe((courseIds) => this.courseIds = courseIds);
       this.selectedCourseId = this.courseIds[0];
