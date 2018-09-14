@@ -6,16 +6,8 @@
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
-    "start": "webpack --config webpack.offline.config.js && node --max-old-space-size=8192 build/server",
-    "build": "yarn build-offline-tools && yarn build-worker",
-    "build-angular-package": "ng-packagr -p package.json",
-    "build-worker": "webpack --config webpack.worker.config.js",
-    "build-offline-tools": "webpack --config webpack.offline.config.js",
-    "build-database": "yarn build-offline-tools && yarn read-raw-data && yarn create-database && rm -rf ../../raw-data/db && yarn import-database && yarn import-database",
-    "read-raw-data": "node build/read-raw-data",
-    "build-sci2-data": "rimraf ../../raw-data/sci2 && mkdir ../../raw-data/sci2 && node src/loader/build-sci2-data.js",
-    "create-database": "node build/create-database",
-    "import-database": "mkdir -p ../../raw-data/db && node build/import-database"
+    "create-database": "node src/ginda-data/create-database.js",
+    "build": "mkdir -p ../../raw-data/ && yarn create-database"
   },
   "private": true,
   "ngPackage": {

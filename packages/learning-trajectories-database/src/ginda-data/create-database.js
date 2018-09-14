@@ -40,7 +40,7 @@ var courses = [
   },
   {
     'id': 'MITxPRO+AMxB+1T2018',
-    'title': 'Additive Manufacturing, Sprint 2018',
+    'title': 'Additive Manufacturing, Spring 2018',
     personMetadata: 'sow2-AM-course/analysis/studentActivity/MITxPRO+AMxB+1T2018-auth_users-LTN-set.csv',
     personCourseActivities: [
       'sow2-AM-course/networks/LTN-Set/Person1.json',
