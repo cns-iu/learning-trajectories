@@ -61,10 +61,6 @@ export class InputSelectorDataService {
     this.innerMapping.next(map);
   }
 
-  getCourseIds(filter: Partial<Filter> = {}) {
-    return this.dataService.getCourseIds(filter);
-  }
-
   getCourseMetadata(): { [id: string]: any } {
     return this.dataService.getCourseMetadata();
   }

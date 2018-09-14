@@ -81,7 +81,11 @@ export class DatabaseService {
         return min <= grade && grade <= max;
       });
     }
-
+    if (filter.course) {
+      filtered = filtered.filter((network) => {
+        return network.personCourseIds.includes(filter.course);
+      });
+    }
     return Observable.of(filtered.keySeq().toArray());
   }
 
@@ -110,5 +114,4 @@ export class DatabaseService {
       return Observable.from(metadata.toArray());
     }
   }
-
 }

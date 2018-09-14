@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { Map } from 'immutable';
 
@@ -9,9 +9,7 @@ import { InputSelectorDataService } from '../shared/input-selector-data.service'
   templateUrl: './course-selector.component.html',
   styleUrls: ['./course-selector.component.sass']
 })
-export class CourseSelectorComponent implements OnInit, OnChanges {
-  @Input() personName: string;
-
+export class CourseSelectorComponent implements OnInit {
   courseTitleLookup: Map<string, any> = Map();
 
   selectedCourseId: string;
@@ -22,18 +20,11 @@ export class CourseSelectorComponent implements OnInit, OnChanges {
   }
 
   constructor(private dataService: InputSelectorDataService) {
-     this.courseTitleLookup = Map(dataService.getCourseMetadata());
+    this.courseTitleLookup = Map(dataService.getCourseMetadata());
+    this.courseIds = this.courseTitleLookup.keySeq().toArray();
+    this.selectedCourseId = this.courseIds[0];
   }
 
   ngOnInit() {
   }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if ('selectedCourseId' in changes || 'personName' in changes) {
-      this.dataService.getCourseIds({personName: this.personName})
-        .subscribe((courseIds) => this.courseIds = courseIds);
-      this.selectedCourseId = this.courseIds[0];
-    }
-  }
-
 }

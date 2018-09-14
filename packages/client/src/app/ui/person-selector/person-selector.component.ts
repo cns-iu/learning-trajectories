@@ -1,9 +1,37 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+
+  ViewEncapsulation,
+  ViewChild,
+
+  OnChanges,
+  SimpleChanges,
+
+  Input
+} from '@angular/core';
 import { Map } from 'immutable';
 import { NouisliderComponent } from 'ng2-nouislider';
 
 import { MetaFilter } from 'learning-trajectories-database';
 import { InputSelectorDataService } from '../shared/input-selector-data.service';
+
+const integerFormatter = {
+  to(value: number): string {
+    return '' + Math.round(value);
+  },
+  from(value: string): number {
+    return Number(value);
+  }
+};
+
+function displayNameSorter(a: string, b: string): number {
+  const aIndex = a.lastIndexOf(' ');
+  const bIndex = b.lastIndexOf(' ');
+  const aValue = Number(a.slice(aIndex + 1));
+  const bValue = Number(b.slice(bIndex + 1));
+  return aValue - bValue;
+}
 
 @Component({
   selector: 'app-person-selector',
@@ -11,7 +39,9 @@ import { InputSelectorDataService } from '../shared/input-selector-data.service'
   styleUrls: ['./person-selector.component.sass'],
   encapsulation: ViewEncapsulation.None
 })
-export class PersonSelectorComponent implements OnInit {
+export class PersonSelectorComponent implements OnInit, OnChanges {
+  @Input() courseId: string;
+
   personNameToId: Map<string, string> = Map();
   persons: string[] = [];
   selectedId: string; // person id, eg. person1
@@ -33,7 +63,7 @@ export class PersonSelectorComponent implements OnInit {
       max: [99]
     },
     connect: [false, true, false],
-    tooltips: [true, true],
+    tooltips: [integerFormatter, integerFormatter],
     format: {
       to: Number,
       from: Number
@@ -49,7 +79,7 @@ export class PersonSelectorComponent implements OnInit {
       max: [100]
     },
     connect: [false, true, false],
-    tooltips: [true, true],
+    tooltips: [integerFormatter, integerFormatter],
     format: {
       to: Number,
       from: Number
@@ -65,7 +95,7 @@ export class PersonSelectorComponent implements OnInit {
     dataService.mapping.subscribe((map) => {
       const oldMap = this.personNameToId;
       this.personNameToId = map;
-      this.persons = this.personNameToId.keySeq().toArray();
+      this.persons = this.personNameToId.keySeq().toArray().sort(displayNameSorter);
       if (!this.selectedId) {
         this.selectedId = this.personNameToId.get(this.persons[1]);
       } else {
@@ -93,6 +123,13 @@ export class PersonSelectorComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if ('courseId' in changes) {
+      this.filter.course = this.courseId;
+      this.updateSelectable();
+    }
   }
 
   onAgeChange([min, max]: [number, number]): void {

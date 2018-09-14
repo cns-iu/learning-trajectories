@@ -6,8 +6,8 @@
 
 <mat-sidenav-container>
   <mat-sidenav #sidenav mode="side" class="sidenav-container" [opened]="true" (openedChange)="openState=$event">
-    <app-course-selector [personName]="personSelector.selectedName" #courseSelector></app-course-selector>
-    <app-person-selector #personSelector></app-person-selector>
+    <app-course-selector #courseSelector></app-course-selector>
+    <app-person-selector [courseId]="courseSelector.selectedCourseId" #personSelector></app-person-selector>
 
     <p class="sidenav-title">Visualization Controls</p>
     <hr>

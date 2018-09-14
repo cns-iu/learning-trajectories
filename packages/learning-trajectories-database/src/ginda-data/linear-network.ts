@@ -1,6 +1,6 @@
 import { CourseModule, Transition } from '../shared/trajectory';
 import { PersonMetaData, genderMapping, levelOfEducationMapping } from '../shared/person-metadata';
-import { List, Map } from 'immutable';
+import { List, Map, Set } from 'immutable';
 
 export class LinearNetwork {
   readonly directed: string;
@@ -8,13 +8,17 @@ export class LinearNetwork {
   readonly nodes: CourseModule[];
   readonly edges: Transition[];
   readonly metadata: PersonMetaData;
+  readonly personCourseIds: string[];
   private moduleIdToName: Map<string, CourseModule> = Map();
+  private courseIds: Set<string>;
 
   constructor (private rawPerson: any, private filteredMetaDataEntry: any) {
+    this.courseIds = Set<string>();
     this.directed = rawPerson.directed[0] as string;
     this.rawPersonName = rawPerson.name[0] as string;
     this.nodes =  (rawPerson.vertices || []).map((m) => this.getNode(m));
     this.edges = (rawPerson.edges || []).map((e) => this.getEdge(e));
+    this.personCourseIds = this.courseIds.toArray();
     this.metadata = this.getPersonMetaData();
     this.postProcessEdges(this.edges);
   }
@@ -50,6 +54,8 @@ export class LinearNetwork {
     this.moduleIdToName = this.moduleIdToName.set(
       courseModule.id, courseModule
     );
+
+    this.courseIds = this.courseIds.add(courseModule.courseId);
 
     return courseModule;
   }
