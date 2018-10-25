@@ -17,7 +17,6 @@ import { CourseSelectorComponent } from './course-selector/course-selector.compo
 @NgModule({
   imports: [
     CommonModule,
-
     SharedModule,
     VisualizationModule
   ],
@@ -25,8 +24,7 @@ import { CourseSelectorComponent } from './course-selector/course-selector.compo
     HomeComponent
   ],
   providers: [
-    InputSelectorDataService,
-    DatabaseService
+    InputSelectorDataService
   ],
   declarations: [HomeComponent, PersonSelectorComponent, AnimationControlsComponent, CourseSelectorComponent]
 })

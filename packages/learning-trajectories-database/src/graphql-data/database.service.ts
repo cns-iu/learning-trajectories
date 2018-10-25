@@ -1,11 +1,16 @@
-import { Filter, MetaFilter } from './filter';
 import { Observable } from 'rxjs/Observable';
-import { CourseModule, Transition } from './trajectory';
-import { PersonMetaData } from './person-metadata';
+
+import { Filter, MetaFilter } from '../shared/filter';
+import { CourseModule, Transition } from '../shared/trajectory';
+import { PersonMetaData } from '../shared/person-metadata';
 import { Injectable } from '@angular/core';
+import { DatabaseService } from '../shared/database.service';
+
 
 @Injectable()
-export class DatabaseService {
+export class GraphQLDatabaseService extends DatabaseService {
+  constructor() { super(); }
+
   getNodes(filter?: Partial<Filter>): Observable<CourseModule[]> {
     return Observable.of([]);
   }
