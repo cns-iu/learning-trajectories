@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server';
 
-const query_schema = gql`
+export const query_schema = gql`
     type CourseModule {
         module_id: String
         course_id: String
