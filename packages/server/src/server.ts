@@ -5,6 +5,8 @@ import * as path from 'path';
 import { createServer } from 'http';
 import * as auth from 'http-auth';
 
+const BigQuery = require('@google-cloud/bigquery');
+
 import { query_schema as typeDefs } from './schema/schema';
 import { resolvers } from './resolvers/resolver';
 
@@ -14,6 +16,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 const DEFAULT_PORT = 4000;
 const PORT = process.env.PORT || DEFAULT_PORT;
+
+const BIG_QUERY_PROJECT = process.env.BIG_QUERY_PROJECT || 'bl-sice-edx-la-visualizations';
 
 const app = express();
 
@@ -28,7 +32,9 @@ app.use('*', cors({ origin: process.env.CLIENT_ORIGIN }));
 app.use('/', express.static(path.join(__dirname, '../../client/dist')));
 
 const server = new ApolloServer({
-  typeDefs, resolvers
+  typeDefs, resolvers, context: {
+    db: new BigQuery({projectId: BIG_QUERY_PROJECT})
+  }
 });
 server.applyMiddleware({ app });
 
