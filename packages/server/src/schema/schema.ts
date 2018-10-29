@@ -46,12 +46,9 @@ export const query_schema = gql`
     }
 
     type Query {
-        nodes: [CourseModule]
-        edges: [Transition]
+        courseModules: [CourseModule]
+        transitions: [Transition]
         courses: [Course]
-        personMetaData: [Student]
-
+        students: [Student]
     }
 `;
-
-module.exports = {query_schema};

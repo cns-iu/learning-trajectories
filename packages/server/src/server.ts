@@ -6,7 +6,7 @@ import { createServer } from 'http';
 import * as auth from 'http-auth';
 
 import { query_schema as typeDefs } from './schema/schema';
-import { Resolver as resolvers } from './resolvers/resolver';
+import { resolvers } from './resolvers/resolver';
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
