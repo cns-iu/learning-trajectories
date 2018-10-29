@@ -4,6 +4,7 @@
   "scripts": {
 		"build": "yarn build-client",
 		"start": "cd packages/client && yarn start",
+		"server": "cd packages/server && yarn start",
 		"setup": "npm install -g yarn lerna @angular/cli && git submodule init && yarn update",
 		"update": "git submodule update && lerna bootstrap && lerna link",
 		"clean": "lerna clean",

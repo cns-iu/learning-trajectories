@@ -24,7 +24,6 @@
     "@angular/core": "^5.0.0",
     "@angular/platform-browser": "^5.0.0",
     "@angular/platform-browser-dynamic": "^5.0.0",
-    "@ngx-dino/core": "^0.0.0",
     "@ngx-dino/legend": "^0.0.0",
     "core-js": "^2.4.1",
     "d3": "^5.0.0",

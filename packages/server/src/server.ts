@@ -5,6 +5,9 @@ import * as path from 'path';
 import { createServer } from 'http';
 import * as auth from 'http-auth';
 
+import { query_schema as typeDefs } from './schema/schema';
+import { resolver as resolvers } from './resolvers/resolver';
+
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
@@ -25,8 +28,7 @@ app.use('*', cors({ origin: process.env.CLIENT_ORIGIN }));
 app.use('/', express.static(path.join(__dirname, '../../client/dist')));
 
 const server = new ApolloServer({
-  typeDefs: [],
-  resolvers: {},
+  typeDefs, resolvers
 });
 server.applyMiddleware({ app });
 
@@ -34,5 +36,5 @@ const httpServer = createServer(app);
 
 // Add a listener for our server on the correct ports
 httpServer.listen(PORT, () => {
-  console.log(`Server ready at http://localhost:${PORT}`);
+  console.log(`🚀 Server ready at http://localhost:${PORT}`);
 });

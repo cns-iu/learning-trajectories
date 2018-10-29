@@ -1,4 +1,6 @@
 import { Observable } from 'rxjs/Observable';
+import { request } from 'graphql-request';
+import 'rxjs/add/observable/fromPromise';
 
 import { Filter, MetaFilter } from '../shared/filter';
 import { CourseModule, Transition } from '../shared/trajectory';
@@ -9,10 +11,20 @@ import { DatabaseService } from '../shared/database.service';
 
 @Injectable()
 export class GraphQLDatabaseService extends DatabaseService {
-  constructor() { super(); }
+  endpoint = 'http://localhost:4000/graphql';
+
+  constructor() {
+    super();
+    this.getNodes(null).subscribe((data) => {console.log(data);});
+  }
 
   getNodes(filter?: Partial<Filter>): Observable<CourseModule[]> {
-    return Observable.of([]);
+    let promise: Promise<CourseModule[]> = request(this.endpoint, `{
+      courses{
+        course_id
+      }
+    }`);
+    return Observable.fromPromise(promise);
   }
   getEdges(filter?: Partial<Filter>): Observable<Transition[]>{
     return Observable.of([]);
