@@ -15,19 +15,44 @@ export class GraphQLDatabaseService extends DatabaseService {
 
   constructor() {
     super();
-    this.getNodes(null).subscribe((data) => {console.log(data);});
+    this.getNodes({personName: '11428379'}).subscribe((data) => {console.log(data);});
   }
 
   getNodes(filter?: Partial<Filter>): Observable<CourseModule[]> {
-    let promise: Promise<CourseModule[]> = request(this.endpoint, `{
-      courses{
+    
+    const courseModulePromoise: Promise<CourseModule[]> = request(this.endpoint, `{
+      courseModules( user_id: ${filter && filter.personName || -1} ){
+        module_id
         course_id
+        category
+        name
+        chapter_id
+        sequential_id
+        vertical_id
+        level
+        index
+        first_leaf_index
       }
     }`);
-    return Observable.fromPromise(promise);
+    return Observable.fromPromise(courseModulePromoise);
   }
   getEdges(filter?: Partial<Filter>): Observable<Transition[]>{
-    return Observable.of([]);
+    const transitionsPromise: Promise<Transition[]> = request(this.endpoint, `{
+      transitions( user_id: ${filter && filter.personName || -1} ){
+        user_id
+        course_id
+        index
+        module_id
+        next_module_id
+        next_index
+        direction
+        distance
+        event_type
+        duration
+        time
+      }
+    }`);
+    return Observable.fromPromise(transitionsPromise);
   }
   getRawPersonName(filter?: Partial<Filter>): Observable<string> {
     return Observable.of('');
@@ -36,12 +61,30 @@ export class GraphQLDatabaseService extends DatabaseService {
     return Observable.of([]);
   }
   getCourseIds(filter?: Partial<Filter>): Observable<string[]> {
-    return Observable.of([]);
+    const coursePromise: Promise<string[]> = request(this.endpoint, `{
+      courses( user_id: ${filter && filter.personName || -1} ){
+        course_id
+      }
+    }`);
+    return Observable.fromPromise(coursePromise);
   }
   getCourseMetadata(): { [id: string]: any } {
     return {};
   }
   getPersonMetaData(filter?: Partial<Filter>) : Observable<PersonMetaData> {
-    return Observable.of(<PersonMetaData>{});
+    const personPromise: Promise<PersonMetaData> = request(this.endpoint, `{
+      students( user_id: ${filter && filter.personName || -1} ){
+        user_id
+        course_id
+        grade
+        gender
+        LoE
+        YoB
+        cert_created_date
+        cert_modified_date
+        cert_status
+      }
+    }`);
+    return Observable.fromPromise(personPromise);
   }
 }

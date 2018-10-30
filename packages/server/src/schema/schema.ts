@@ -46,9 +46,9 @@ export const query_schema = gql`
     }
 
     type Query {
-        courseModules: [CourseModule]
-        transitions: [Transition]
-        courses: [Course]
-        students: [Student]
+        courseModules(user_id: Int): [CourseModule]
+        transitions(user_id: Int): [Transition]
+        courses(user_id: Int): [Course]
+        students(user_id: Int): [Student]
     }
 `;
