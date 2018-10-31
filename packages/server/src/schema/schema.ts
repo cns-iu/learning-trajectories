@@ -60,9 +60,9 @@ export const typeDefs = gql`
   }
 
   type Query {
-    courseModules(user_id: Int): [CourseModule!]!
-    transitions(user_id: Int): [Transition!]!
-    courses(user_id: Int): [Course!]!
-    students(user_id: Int): [Student!]!
+    courseModules(filter: Filter): [CourseModule!]!
+    transitions(filter: Filter): [Transition!]!
+    courses(filter: Filter): [Course!]!
+    students(filter: StudentFilter): [Student!]!
   }
 `;

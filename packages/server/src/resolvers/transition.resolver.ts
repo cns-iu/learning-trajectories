@@ -11,9 +11,9 @@ export class TransitionResolver implements Resolver {
 
   async getTransitions(args, context: GraphQLContext): Promise<any> {
     let where = ' LIMIT 1000';
-    if (args.user_id && args.user_id !== -1) {
+    if (args.filter && args.filter.user_id) {
       where = `
-        WHERE user_id = ${args.user_id}
+        WHERE user_id = ${args.filter.user_id}
       `;
     }
     const query = `SELECT * FROM learning_trajectories.transitions ${where}`;
