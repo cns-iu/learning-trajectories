@@ -7,8 +7,8 @@ import * as auth from 'http-auth';
 
 const BigQuery = require('@google-cloud/bigquery');
 
-import { query_schema as typeDefs } from './schema/schema';
-import { resolvers } from './resolvers/resolver';
+import { typeDefs } from './schema';
+import { resolvers } from './resolvers';
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
