@@ -1,4 +1,5 @@
 import { Resolver } from './resolver';
+import { GraphQLContext } from '../shared/context';
 
 
 export class StudentResolver implements Resolver {
@@ -8,8 +9,8 @@ export class StudentResolver implements Resolver {
     }
   };
 
-  async getStudents(args, context: any): Promise<any> {
-    let where = '';
+  async getStudents(args, context: GraphQLContext): Promise<any> {
+    let where = ' LIMIT 1000';
     if (args.user_id && args.user_id !== -1) {
       where = `
         WHERE course_id in (

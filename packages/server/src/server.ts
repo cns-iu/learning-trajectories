@@ -5,10 +5,10 @@ import * as path from 'path';
 import { createServer } from 'http';
 import * as auth from 'http-auth';
 
-const BigQuery = require('@google-cloud/bigquery');
-
 import { typeDefs } from './schema';
 import { resolvers } from './resolvers';
+import { GraphQLContext } from './shared/context';
+
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
@@ -32,9 +32,7 @@ app.use('*', cors({ origin: process.env.CLIENT_ORIGIN }));
 app.use('/', express.static(path.join(__dirname, '../../client/dist')));
 
 const server = new ApolloServer({
-  typeDefs, resolvers, context: {
-    db: new BigQuery({projectId: BIG_QUERY_PROJECT})
-  }
+  typeDefs, resolvers, context: new GraphQLContext(BIG_QUERY_PROJECT)
 });
 server.applyMiddleware({ app });
 

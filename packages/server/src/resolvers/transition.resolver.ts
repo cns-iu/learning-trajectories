@@ -1,4 +1,5 @@
 import { Resolver } from './resolver';
+import { GraphQLContext } from '../shared/context';
 
 
 export class TransitionResolver implements Resolver {
@@ -8,8 +9,8 @@ export class TransitionResolver implements Resolver {
     }
   };
 
-  async getTransitions(args, context: any): Promise<any> {
-    let where = '';
+  async getTransitions(args, context: GraphQLContext): Promise<any> {
+    let where = ' LIMIT 1000';
     if (args.user_id && args.user_id !== -1) {
       where = `
         WHERE user_id = ${args.user_id}
