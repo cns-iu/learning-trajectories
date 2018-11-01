@@ -1,110 +1,80 @@
 import { Observable } from 'rxjs/Observable';
-import { request } from 'graphql-request';
-import 'rxjs/add/observable/fromPromise';
+import { GraphQLClient } from 'graphql-request';
+import 'rxjs/add/observable/defer';
+import 'rxjs/add/operator/map';
 
-import { Filter, MetaFilter, GraphQLFilter, GraphQLStudentFilter, GraphQLFilterBuilder, GraphQLStudentFilterBuilder } from '../shared/filter';
+import { Filter, MetaFilter } from '../shared/filter';
 import { CourseModule, Transition } from '../shared/trajectory';
 import { PersonMetaData } from '../shared/person-metadata';
 import { Injectable } from '@angular/core';
 import { DatabaseService } from '../shared/database.service';
 
+import { asCourseModule, asTransition, asPersonMetaData, 
+  getCourseModulesQuery, getTransitionsQuery, getStudentIdsQuery, getStudentsQuery, getCoursesQuery } from './graphql-queries';
+import { GraphQLFilter, GraphQLStudentFilter } from './graphql-filter';
+
 
 @Injectable()
 export class GraphQLDatabaseService extends DatabaseService {
-  endpoint = 'http://localhost:4000/graphql';
+  endpoint = 'http://localhost:4000/graphql'; // TODO: make configurable
+  client: GraphQLClient;
+  private courseMetadata: { [id: string]: any } = {};
 
   constructor() {
     super();
-    this.getPersonNames({grade: [0,3], age: [20,25], course:"MITProfessionalX/SysEngxB1/3T2016"}).subscribe((data) => {console.log(data);});
+    this.client = new GraphQLClient(this.endpoint, {
+      credentials: 'include',
+      mode: 'cors'
+    });
+    this.preloadCourseMetadata();
+
+    // TODO: Remove me when finished testing/implementing
+    this.getPersonNames({grade: [0,3], age: [20,25], course:"MITProfessionalX/SysEngxB1/3T2016"}).subscribe(console.log);
+    console.log(this);
+  }
+
+  private preloadCourseMetadata() {
+    this.getCourses().subscribe(courses => {
+      courses.forEach(c => this.courseMetadata[c.id] = c);
+    });
+  }
+
+  query<T = any>(query: string, selector: string, vars?: any): Observable<T[]> {
+    return Observable.defer(async () => {
+      const results = await this.client.request(query, vars);
+      return results[selector];
+    });
   }
 
   getNodes(filter?: Partial<Filter>): Observable<CourseModule[]> {
-    const query = `
-    query getCourseModules($filter: Filter) {
-        courseModules(filter: $filter) {
-          module_id
-          course_id
-          category
-          name
-          chapter_id
-          sequential_id
-          vertical_id
-          level
-          index
-          first_leaf_index
-        }
-      }
-    `;
-    const filterVariables: GraphQLFilter = new GraphQLFilterBuilder(filter).getGraphQLFilter();
-    const courseModulePromoise: Promise<CourseModule[]> = request(this.endpoint, query, {'filter': filterVariables});
-    return Observable.fromPromise(courseModulePromoise);
+    return this.query(getCourseModulesQuery, 'courseModules', {filter: new GraphQLFilter(filter)})
+      .map(results => results.map(asCourseModule));
   }
   getEdges(filter?: Partial<Filter>): Observable<Transition[]>{
-    const query =  `
-    query getTransitions($filter: Filter){
-      transitions( filter: $filter){
-        user_id
-        course_id
-        index
-        module_id
-        next_module_id
-        next_index
-        direction
-        distance
-        event_type
-        duration
-        time
-      }
-    }`;
-    const filterVariables: GraphQLFilter = new GraphQLFilterBuilder(filter).getGraphQLFilter();
-    const transitionsPromise: Promise<Transition[]> = request(this.endpoint,query, {'filter': filterVariables});
-    return Observable.fromPromise(transitionsPromise);
+    return this.query(getTransitionsQuery, 'transitions', {filter: new GraphQLFilter(filter)})
+      .map(results => results.map(asTransition));
   }
   getRawPersonName(filter?: Partial<Filter>): Observable<string> {
-    return Observable.of('');
+    return this.query(getStudentIdsQuery, 'students', {filter: new GraphQLFilter(filter)})
+      .map(results => results.length ? results[0].user_id : '');
   }
   getPersonNames(filter?: Partial<MetaFilter>): Observable<string[]> {
-    const query = `
-    query getStudents( $filter: StudentFilter ){
-      students( filter: $filter ){
-        user_id
-      }
-    }`;
-    const filterVariables: GraphQLStudentFilter = new GraphQLStudentFilterBuilder(filter,null).getGraphQLStudentFilter();
-    const personPromise: Promise<string[]> = request(this.endpoint, query,{'filter': filterVariables} );
-    return Observable.fromPromise(personPromise);
+    return this.query(getStudentIdsQuery, 'students', {filter: new GraphQLStudentFilter(filter)})
+      .map(results => results.map(s => s.user_id));
   }
   getCourseIds(filter?: Partial<Filter>): Observable<string[]> {
-    const query=  `
-    query getCourses($filter: Filter) {
-      courses( filter: $filter){
-        course_id
-      }
-    }`;
-    const filterVariables: GraphQLFilter = new GraphQLFilterBuilder(filter).getGraphQLFilter();
-    const coursePromise: Promise<string[]> = request(this.endpoint, query, {'filter': filterVariables}) ;
-    return Observable.fromPromise(coursePromise);
+    return this.query(getCoursesQuery, 'courses', {filter: new GraphQLFilter(filter)})
+      .map(results => results.map(c => c.course_id));
+  }
+  getCourses(): Observable<{id: string, title: string}[]> {
+    return this.query(getCoursesQuery, 'courses')
+      .map(results => results.map(c => ({id: c.course_id, title: c.course_title})));
   }
   getCourseMetadata(): { [id: string]: any } {
-    return {};
+    return this.courseMetadata;
   }
   getPersonMetaData(filter?: Partial<Filter>) : Observable<PersonMetaData> {
-    const query = `
-    query getStudents( $filter: StudentFilter ){
-      students( filter: $filter ){
-        user_id
-        course_id
-        grade
-        gender
-        LoE
-        YoB
-        cert_created_date
-        cert_modified_date
-        cert_status
-      }
-    }`;
-    const filterVariables: GraphQLStudentFilter = new GraphQLStudentFilterBuilder(null, filter).getGraphQLStudentFilter();
-    const personPromise: Promise<PersonMetaData> = request(this.endpoint, query,{'filter': filterVariables} );
-    return Observable.fromPromise(personPromise);
+    return this.query<PersonMetaData>(getStudentsQuery, 'students', {filter: new GraphQLStudentFilter(filter)})
+      .map(results => results.length ? asPersonMetaData(results[0]) : null);
   }
 }

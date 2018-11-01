@@ -10,7 +10,7 @@ export class StudentResolver implements Resolver {
   };
 
   async getStudents(args, context: GraphQLContext): Promise<any> {
-    let where = 'true ';
+    let where = 'WHERE true ';
     if (args.filter) {
       if (args.filter.user_id) {
         where += `
@@ -34,10 +34,10 @@ export class StudentResolver implements Resolver {
         `;
       }
     }
-    if (where === 'true ') {
-      where = ' LIMIT 1000';
+    if (where === 'WHERE true ') {
+      where = 'LIMIT 1000';
     }
-    const query = `SELECT * FROM learning_trajectories.students WHERE ${where}`;
+    const query = `SELECT * FROM learning_trajectories.students ${where}`;
     console.log(query);
     const students = await context.db.query(query);
     return students[0];
