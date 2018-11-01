@@ -58,11 +58,13 @@ export class GraphQLStudentFilterBuilder {
 
     if (metaFilter) {
       if(metaFilter.age && metaFilter.age.length === 2) {
+        this.age = {min: null, max: null};
         this.age.min = metaFilter.age[0];
         this.age.max = metaFilter.age[1];
       }
   
       if(metaFilter.grade && metaFilter.grade.length === 2) {
+        this.grade = {min: null, max: null};
         this.grade.min = metaFilter.grade[0];
         this.grade.max = metaFilter.grade[1];
       }

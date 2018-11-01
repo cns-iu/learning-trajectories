@@ -26,6 +26,9 @@ export const typeDefs = gql`
     gender: String
     LoE: String
     YoB: Int
+    cert_created_date: String
+    cert_modified_date: String
+    cert_status: String
   }
 
   type Transition {

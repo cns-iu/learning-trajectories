@@ -10,16 +10,35 @@ export class StudentResolver implements Resolver {
   };
 
   async getStudents(args, context: GraphQLContext): Promise<any> {
-    let where = ' LIMIT 1000';
-    if (args.user_id && args.user_id !== -1) {
-      where = `
-        WHERE course_id in (
-          SELECT course_id from learning_trajectories.students
-          WHERE user_id = ${args.user_id}
-        )
-      `;
+    let where = 'true ';
+    if (args.filter) {
+      if (args.filter.user_id) {
+        where += `
+           and user_id = ${args.filter.user_id}
+        `;
+      }
+      if (args.filter.age) {
+        const currentYear = new Date().getFullYear();
+        where += `
+           and YoB BETWEEN ${currentYear - args.filter.age.max} and ${currentYear - args.filter.age.min}
+        `;
+      }
+      if (args.filter.grade) {
+        where += `
+           and grade BETWEEN ${args.filter.grade.min} and ${args.filter.grade.max}
+        `;
+      }
+      if (args.filter.course) {
+        where += `
+           and course_id = '${args.filter.course}'
+        `;
+      }
     }
-    const query = `SELECT * FROM learning_trajectories.students ${where}`;
+    if (where === 'true ') {
+      where = ' LIMIT 1000';
+    }
+    const query = `SELECT * FROM learning_trajectories.students WHERE ${where}`;
+    console.log(query);
     const students = await context.db.query(query);
     return students[0];
   }

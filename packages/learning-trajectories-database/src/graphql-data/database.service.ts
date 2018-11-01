@@ -15,11 +15,10 @@ export class GraphQLDatabaseService extends DatabaseService {
 
   constructor() {
     super();
-    this.getCourseIds({personName: '11428379'}).subscribe((data) => {console.log(data);});
+    this.getPersonNames({grade: [0,3], age: [20,25], course:"MITProfessionalX/SysEngxB1/3T2016"}).subscribe((data) => {console.log(data);});
   }
 
   getNodes(filter?: Partial<Filter>): Observable<CourseModule[]> {
-    
     const query = `
     query getCourseModules($filter: Filter) {
         courseModules(filter: $filter) {
@@ -66,22 +65,14 @@ export class GraphQLDatabaseService extends DatabaseService {
   }
   getPersonNames(filter?: Partial<MetaFilter>): Observable<string[]> {
     const query = `
-    query getStudents( $filter: Filter ){
+    query getStudents( $filter: StudentFilter ){
       students( filter: $filter ){
         user_id
-        course_id
-        grade
-        gender
-        LoE
-        YoB
-        cert_created_date
-        cert_modified_date
-        cert_status
       }
     }`;
-    const filterVariables: GraphQLStudentFilter = new GraphQLStudentFilterBuilder(filter, null).getGraphQLStudentFilter();
-    const personPromise: Promise<PersonMetaData> = request(this.endpoint, query,{'filter': filterVariables} );
-    return Observable.of([]);
+    const filterVariables: GraphQLStudentFilter = new GraphQLStudentFilterBuilder(filter,null).getGraphQLStudentFilter();
+    const personPromise: Promise<string[]> = request(this.endpoint, query,{'filter': filterVariables} );
+    return Observable.fromPromise(personPromise);
   }
   getCourseIds(filter?: Partial<Filter>): Observable<string[]> {
     const query=  `
@@ -99,7 +90,7 @@ export class GraphQLDatabaseService extends DatabaseService {
   }
   getPersonMetaData(filter?: Partial<Filter>) : Observable<PersonMetaData> {
     const query = `
-    query getStudents( $filter: Filter ){
+    query getStudents( $filter: StudentFilter ){
       students( filter: $filter ){
         user_id
         course_id
@@ -112,7 +103,7 @@ export class GraphQLDatabaseService extends DatabaseService {
         cert_status
       }
     }`;
-    const filterVariables: GraphQLFilter = new GraphQLFilterBuilder(filter).getGraphQLFilter();
+    const filterVariables: GraphQLStudentFilter = new GraphQLStudentFilterBuilder(null, filter).getGraphQLStudentFilter();
     const personPromise: Promise<PersonMetaData> = request(this.endpoint, query,{'filter': filterVariables} );
     return Observable.fromPromise(personPromise);
   }
