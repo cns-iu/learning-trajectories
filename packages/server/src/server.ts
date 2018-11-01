@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { ApolloServer } from 'apollo-server-express';
 import * as express from 'express';
 import * as cors from 'cors';
@@ -14,22 +15,31 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
-const DEFAULT_PORT = 4000;
-const PORT = process.env.PORT || DEFAULT_PORT;
-
+const PORT = process.env.PORT || 4000;
 const BIG_QUERY_PROJECT = process.env.BIG_QUERY_PROJECT || 'bl-sice-edx-la-visualizations';
+const CLIENT_BUILD = process.env.CLIENT_BUILD || '../../client/dist';
+const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || null;
+const USERS_FILE = process.env.USERS_FILE || '../../../raw-data/users.htpasswd';
+
+function abspath(rawPath: string): string {
+  if (rawPath.length && rawPath[0] === '.') {
+    return path.resolve(path.join(__dirname, rawPath));
+  } else {
+    return path.resolve(rawPath);
+  }
+}
 
 const app = express();
 
 const basicAuth = auth.basic({
   realm: 'Learning Trajectories',
-  file: path.join(__dirname, '../../../raw-data/users.htpasswd')
+  file: abspath(USERS_FILE)
 });
 app.use(auth.connect(basicAuth));
 
-app.use('*', cors({ origin: process.env.CLIENT_ORIGIN }));
+app.use('*', cors({ origin: CLIENT_ORIGIN }));
 
-app.use('/', express.static(path.join(__dirname, '../../client/dist')));
+app.use('/', express.static(abspath(CLIENT_BUILD)));
 
 const server = new ApolloServer({
   typeDefs, resolvers, context: new GraphQLContext(BIG_QUERY_PROJECT)
