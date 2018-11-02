@@ -1,5 +1,8 @@
+import { List, Map } from 'immutable';
+
 import { CourseModule, Transition } from '../shared/trajectory';
-import { PersonMetaData } from '../shared/person-metadata';
+import { PersonMetaData, genderMapping, levelOfEducationMapping } from '../shared/person-metadata';
+
 
 export const getCourseModulesQuery = `
   query getCourseModules($filter: Filter) {
@@ -18,9 +21,31 @@ export const getCourseModulesQuery = `
     }
 `;
 
-// TODO: Map raw data into CourseModules
 export function asCourseModule(data: any): CourseModule {
-  return <CourseModule>data;
+  return <CourseModule>{
+    id: data.module_id,
+    courseId: data.course_id,
+    moduleType: data.category,
+    description: data.name,
+
+    level2Id: data.sequential_id,
+    level2Label: data.sequential_id, // TODO
+    level1Id: data.chapter_id,
+    level1Label: data.chapter_id, // TODO
+
+    order: data.first_leaf_index,
+    // TODO: Verify if below used, before creating queries
+    uniqueStudents: 0,
+    sessions: 0,
+    days: 0,
+    events: 0,
+    totalTime: 0,
+    forwardIndegree: 0,
+    backwardIndegree: 0,
+    forwardOutdegree: 0,
+    backwardOutdegree: 0,
+    selfLoopCount: 0,
+  };
 }
 
 export const getTransitionsQuery = `
@@ -29,9 +54,11 @@ export const getTransitionsQuery = `
       user_id
       course_id
       index
+      first_leaf_index
       module_id
       next_module_id
       next_index
+      next_first_leaf_index
       direction
       distance
       event_type
@@ -41,9 +68,54 @@ export const getTransitionsQuery = `
   }
 `;
 
-// TODO: Map raw data into Transitions
 export function asTransition(data: any): Transition {
-  return <Transition>data;
+  return <Transition>{
+    source: data.module_id,
+    target: data.next_module_id,
+
+    sourceModule: {id: data.module_id}, // TODO
+    targetModule: {id: data.next_module_id}, // TODO
+
+    sourceOrder: data.first_leaf_index,
+    sourceSessionId: '', // TODO: Unused?
+    sourceTemporalSessionId: 0, // TODO: Unused?
+
+    targetOrder: data.next_first_leaf_index,
+    targetSessionId: '', // TODO: Unused?
+    targetTemporalSessionId: 0, // TODO: Unused?
+
+    direction: data.direction,
+    distance: data.distance,
+    timestamp: data.time,
+    userId: data.user_id,
+
+    selfLoopFlag: data.direction === 'sl',
+
+    count: 0, // TODO: Unused?
+  };
+}
+
+export function postProcessTransitions(edges: Transition[]): Transition[] {
+  const overlapMap = Map<any, Transition[]>().withMutations((map) => {
+    edges.forEach((edge) => {
+      const key = List.of(edge.source, edge.target);
+      let list = map.get(key);
+      if (list === undefined) {
+        list = [];
+        map.set(key, list);
+      }
+      list.push(edge);
+    });
+  });
+
+  overlapMap.forEach((list) => {
+    const length = list.length;
+    list.forEach((edge) => {
+      edge.count = length;
+    });
+  });
+
+  return edges;
 }
 
 export const getCoursesQuery = `
@@ -76,7 +148,11 @@ export const getStudentsQuery = `
   }
 `;
 
-// TODO: Map raw data into PersonMetadata
 export function asPersonMetaData(data: any): PersonMetaData {
-  return <PersonMetaData>data;
+  return <PersonMetaData>{
+    grade: (data.grade * 100).toString() + '%',
+    gender: genderMapping.get(data.gender) || data.gender || '',
+    levelOfEducation: levelOfEducationMapping.get(data.LoE) || data.LoE || '',
+    born: data.YoB || ''
+  };
 }

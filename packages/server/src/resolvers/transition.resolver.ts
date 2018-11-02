@@ -18,6 +18,6 @@ export class TransitionResolver implements Resolver {
     }
     const query = `SELECT * FROM learning_trajectories.transitions ${where}`;
     const transitions = await context.db.query(query);
-    return transitions[0];
+    return transitions[0].map(t => (t.time = t.time ? t.time.value : null, t));
   }
 }

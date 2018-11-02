@@ -1,6 +1,8 @@
 import { gql } from 'apollo-server';
 
 export const typeDefs = gql`
+  scalar Date
+
   type CourseModule {
     module_id: String
     course_id: String
@@ -35,9 +37,11 @@ export const typeDefs = gql`
     user_id: String
     course_id: String
     index: Int
+    first_leaf_index: Int
     module_id: String
     next_module_id: String
     next_index: Int
+    next_first_leaf_index: Int
     direction: String
     distance: Int
     event_type: String

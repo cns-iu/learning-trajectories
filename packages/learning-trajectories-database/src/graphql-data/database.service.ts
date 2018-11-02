@@ -9,7 +9,7 @@ import { PersonMetaData } from '../shared/person-metadata';
 import { Injectable } from '@angular/core';
 import { DatabaseService } from '../shared/database.service';
 
-import { asCourseModule, asTransition, asPersonMetaData, 
+import { asCourseModule, asTransition, postProcessTransitions, asPersonMetaData, 
   getCourseModulesQuery, getTransitionsQuery, getStudentIdsQuery, getStudentsQuery, getCoursesQuery } from './graphql-queries';
 import { GraphQLFilter, GraphQLStudentFilter } from './graphql-filter';
 
@@ -52,7 +52,7 @@ export class GraphQLDatabaseService extends DatabaseService {
   }
   getEdges(filter?: Partial<Filter>): Observable<Transition[]>{
     return this.query(getTransitionsQuery, 'transitions', {filter: new GraphQLFilter(filter)})
-      .map(results => results.map(asTransition));
+      .map(results => postProcessTransitions(results.map(asTransition)));
   }
   getRawPersonName(filter?: Partial<Filter>): Observable<string> {
     return this.query(getStudentIdsQuery, 'students', {filter: new GraphQLFilter(filter)})
