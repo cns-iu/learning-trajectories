@@ -18,7 +18,6 @@ import { GraphQLFilter, GraphQLStudentFilter } from './graphql-filter';
 export class GraphQLDatabaseService extends DatabaseService {
   endpoint = 'http://localhost:4000/graphql'; // TODO: make configurable
   client: GraphQLClient;
-  private courseMetadata: { [id: string]: any } = {};
 
   constructor() {
     super();
@@ -26,17 +25,10 @@ export class GraphQLDatabaseService extends DatabaseService {
       credentials: 'include',
       mode: 'cors'
     });
-    this.preloadCourseMetadata();
 
     // TODO: Remove me when finished testing/implementing
     this.getPersonNames({grade: [0,3], age: [20,25], course:"MITProfessionalX/SysEngxB1/3T2016"}).subscribe(console.log);
     console.log(this);
-  }
-
-  private preloadCourseMetadata() {
-    this.getCourses().subscribe(courses => {
-      courses.forEach(c => this.courseMetadata[c.id] = c);
-    });
   }
 
   query<T = any>(query: string, selector: string, vars?: any): Observable<T[]> {
@@ -70,8 +62,12 @@ export class GraphQLDatabaseService extends DatabaseService {
     return this.query(getCoursesQuery, 'courses')
       .map(results => results.map(c => ({id: c.course_id, title: c.course_title})));
   }
-  getCourseMetadata(): { [id: string]: any } {
-    return this.courseMetadata;
+  getCourseMetadata(): Observable<{ [id: string]: any }> {
+    return this.getCourses().map(courses => {
+      const metadata: { [id: string]: any } = {};
+      courses.forEach(c => metadata[c.id] = c);
+      return metadata;
+    });
   }
   getPersonMetaData(filter?: Partial<Filter>) : Observable<PersonMetaData> {
     return this.query<PersonMetaData>(getStudentsQuery, 'students', {filter: new GraphQLStudentFilter(filter)})

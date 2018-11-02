@@ -11,7 +11,7 @@ import { DatabaseService, MetaFilter, Filter } from 'learning-trajectories-datab
 function displayName(id: string): string {
   const re = /(\D)(\D*)(\d*)/;
   const match = re.exec(id);
-  return match[1].toUpperCase() + match[2] + ' ' + match[3];
+  return match ? match[1].toUpperCase() + match[2] + ' ' + match[3] : id;
 }
 
 function namesToMap(names: string[]): Map<string, string> {
@@ -61,7 +61,7 @@ export class InputSelectorDataService {
     this.innerMapping.next(map);
   }
 
-  getCourseMetadata(): { [id: string]: any } {
+  getCourseMetadata(): Observable<{ [id: string]: any }> {
     return this.dataService.getCourseMetadata();
   }
 }

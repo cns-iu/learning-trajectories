@@ -98,8 +98,8 @@ export class GindaDatabaseService extends DatabaseService {
     }
   }
 
-  getCourseMetadata(): { [id: string]: any } {
-    return database.courseMetaData.toJS();
+  getCourseMetadata(): Observable<{ [id: string]: any }> {
+    return Observable.of(database.courseMetaData.toJS());
   }
 
   getPersonMetaData(filter: Partial<Filter> = {}) : Observable<PersonMetaData> {

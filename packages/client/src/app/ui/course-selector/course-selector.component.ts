@@ -10,21 +10,21 @@ import { InputSelectorDataService } from '../shared/input-selector-data.service'
   styleUrls: ['./course-selector.component.sass']
 })
 export class CourseSelectorComponent implements OnInit {
-  courseTitleLookup: Map<string, any> = Map();
-
+  courseTitleLookup: Map<string, any>;
   selectedCourseId: string;
-  courseIds: string[] = [];
+  courseIds: string[];
 
   get selectedCourse(): string {
-    return this.courseTitleLookup.get(this.selectedCourseId);
+    return this.courseTitleLookup ? this.courseTitleLookup.get(this.selectedCourseId) : null;
   }
 
-  constructor(private dataService: InputSelectorDataService) {
-    this.courseTitleLookup = Map(dataService.getCourseMetadata());
-    this.courseIds = this.courseTitleLookup.keySeq().toArray();
-    this.selectedCourseId = this.courseIds[0];
-  }
+  constructor(private dataService: InputSelectorDataService) { }
 
   ngOnInit() {
+    this.dataService.getCourseMetadata().subscribe((courses) => {
+      this.courseTitleLookup = Map(courses);
+      this.courseIds = this.courseTitleLookup.keySeq().toArray();
+      this.selectedCourseId = this.courseIds[0];
+    });
   }
 }

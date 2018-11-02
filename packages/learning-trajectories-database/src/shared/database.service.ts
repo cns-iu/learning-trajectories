@@ -21,8 +21,8 @@ export class DatabaseService {
   getCourseIds(filter?: Partial<Filter>): Observable<string[]> {
     return Observable.of([]);
   }
-  getCourseMetadata(): { [id: string]: any } {
-    return {};
+  getCourseMetadata(): Observable<{ [id: string]: any }> {
+    return Observable.of({});
   }
   getPersonMetaData(filter?: Partial<Filter>) : Observable<PersonMetaData> {
     return Observable.of(<PersonMetaData>{});
