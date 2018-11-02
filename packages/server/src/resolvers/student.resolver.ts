@@ -10,36 +10,39 @@ export class StudentResolver implements Resolver {
   };
 
   async getStudents(args, context: GraphQLContext): Promise<any> {
-    let where = 'WHERE true ';
+    let query = 'SELECT * FROM learning_trajectories.students';
+    const where = [], params: any = {};
     if (args.filter) {
       if (args.filter.user_id) {
-        where += `
-           and user_id = ${args.filter.user_id}
-        `;
+        where.push('user_id = @user_id');
+        params.user_id = Number(args.filter.user_id);
       }
-      if (args.filter.age) {
-        const currentYear = new Date().getFullYear();
-        where += `
-           and YoB BETWEEN ${currentYear - args.filter.age.max} and ${currentYear - args.filter.age.min}
-        `;
+      if (args.filter.born) {
+        where.push('YoB BETWEEN @minYear AND @maxYear');
+        params.minYear = args.filter.born.min;
+        params.maxYear = args.filter.born.max;
       }
       if (args.filter.grade) {
-        where += `
-           and grade BETWEEN ${args.filter.grade.min} and ${args.filter.grade.max}
-        `;
+        where.push('grade BETWEEN @minGrade AND @maxGrade');
+        params.minGrade = args.filter.grade.min / 100.0;
+        params.maxGrade = args.filter.grade.max / 100.0;
       }
       if (args.filter.course) {
-        where += `
-           and course_id = '${args.filter.course}'
-        `;
+        where.push('course_id = @course_id');
+        params.course_id = args.filter.course;
+      }
+      if (args.filter.education) {
+        where.push('LoE = @education');
+        params.education = args.filter.education;
       }
     }
-    if (where === 'WHERE true ') {
-      where = 'LIMIT 1000';
+    if (where.length === 0) {
+      query += ' LIMIT 1000';
+    } else {
+      query += ` WHERE ${where.join(' AND ')}`;
     }
-    const query = `SELECT * FROM learning_trajectories.students ${where}`;
-    console.log(query);
-    const students = await context.db.query(query);
-    return students[0];
+    console.log(JSON.stringify({query, params}));
+    const results = await context.db.query({query, params});
+    return results[0];
   }
 }

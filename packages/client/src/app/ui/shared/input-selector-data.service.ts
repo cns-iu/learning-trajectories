@@ -6,7 +6,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeAll';
 import 'rxjs/add/operator/reduce';
 
-import { DatabaseService, MetaFilter, Filter } from 'learning-trajectories-database';
+import { DatabaseService, MetaFilter, Filter, levelOfEducationMapping } from 'learning-trajectories-database';
 
 function displayName(id: string): string {
   const re = /(\D)(\D*)(\d*)/;
@@ -46,19 +46,22 @@ export class InputSelectorDataService {
     this.yearRange = dataService.getPersonMetaData()
       .map((meta) => meta.born)
       .reduce(updateRange, [undefined, undefined]) as Observable<[number, number]>;
-    this.education = dataService.getPersonMetaData()
-      .map((meta) => meta.levelOfEducation)
-      .reduce((set, ed) => (set.add(ed), set), new Set<string>())
-      .map((set) => (set.delete(''), set))
-      .map((set) => Array.from(set.values()));
+    // this.education = dataService.getPersonMetaData()
+    //   .map((meta) => meta.levelOfEducation)
+    //   .reduce((set, ed) => (set.add(ed), set), new Set<string>())
+    //   .map((set) => (set.delete(''), set))
+    //   .map((set) => Array.from(set.values()));
+    this.education = Observable.of(levelOfEducationMapping.valueSeq().toArray());
 
     this.update();
   }
 
   update(filter: Partial<MetaFilter> = {}): void {
-    const names = this.dataService.getPersonNames(filter);
-    const map = names.map(namesToMap);
-    this.innerMapping.next(map);
+    if (filter.course) {
+      const names = this.dataService.getPersonNames(filter);
+      const map = names.map(namesToMap);
+      this.innerMapping.next(map);
+    }
   }
 
   getCourseMetadata(): Observable<{ [id: string]: any }> {

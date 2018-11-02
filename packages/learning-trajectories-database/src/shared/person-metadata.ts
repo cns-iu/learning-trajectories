@@ -22,3 +22,13 @@ export const levelOfEducationMapping = Map({
   'other': 'Other',
   'none': 'None',
 });
+
+export const levelOfEducationMappingInverse = Map({
+  'High School': 'hs',
+  'Bachelors': 'b',
+  'Masters': 'm',
+  'PhD': 'p',
+  'Associates': 'a',
+  'Other': 'other',
+  'None': 'none',
+});

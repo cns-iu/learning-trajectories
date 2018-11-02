@@ -36,23 +36,22 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
   nodeStream: Observable<RawChangeSet>;
   edgeStream: Observable<RawChangeSet>;
 
-  personMetaData: PersonMetaData;
+  personMetaData: Observable<PersonMetaData>;
 
   fields: {[key: string]: BoundField<any>};
 
   animationDuration = 5;
 
   constructor(private service: VisualizationDataService) {
-    this.nodeStream = service.getNodes();
-    this.edgeStream = service.getEdges();
+    // this.nodeStream = service.getNodes();
+    // this.edgeStream = service.getEdges();
 
-    this.personMetaData = service.getPersonMetaData();
+    // this.personMetaData = service.getPersonMetaData();
 
     const combinedFields = assign({}, fields, pick(service, [
       'nodeWeightField', 'edgeWeightField', 'edgeColorField'
     ]));
     this.fields = mapValues(combinedFields, (f: any) => f.getBoundField());
-
   }
 
   ngOnInit() {
@@ -87,7 +86,7 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
         personName: this.personSelected,
         includeUnused: this.includeUnused
       };
-
+      
       this.nodeStream = this.service.getNodes(filter);
       this.edgeStream = this.service.getEdges(filter);
       this.personMetaData = this.service.getPersonMetaData(filter);

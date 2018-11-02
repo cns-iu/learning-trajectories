@@ -2,11 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { UiModule } from './ui';
-import { DatabaseService, GindaDatabaseService, GraphQLDatabaseService } from 'learning-trajectories-database';
+import { DatabaseService, GraphQLDatabaseService } from 'learning-trajectories-database';
 
 import { AppComponent } from './app.component';
-
-const temp = new GraphQLDatabaseService();
 
 @NgModule({
   imports: [
@@ -17,7 +15,7 @@ const temp = new GraphQLDatabaseService();
     AppComponent
   ],
   providers: [
-    { provide: DatabaseService, useClass: GindaDatabaseService }
+    { provide: DatabaseService, useClass: GraphQLDatabaseService }
   ],
   bootstrap: [AppComponent]
 })

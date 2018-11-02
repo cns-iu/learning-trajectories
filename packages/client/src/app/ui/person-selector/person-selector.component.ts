@@ -91,8 +91,10 @@ export class PersonSelectorComponent implements OnInit, OnChanges {
     return this.personNameToId.keyOf(this.selectedId);
   }
 
-  constructor(private dataService: InputSelectorDataService) {
-    dataService.mapping.subscribe((map) => {
+  constructor(private dataService: InputSelectorDataService) { }
+
+  ngOnInit() {
+    this.dataService.mapping.subscribe((map) => {
       const oldMap = this.personNameToId;
       this.personNameToId = map;
       this.persons = this.personNameToId.keySeq().toArray().sort(displayNameSorter);
@@ -102,10 +104,10 @@ export class PersonSelectorComponent implements OnInit, OnChanges {
         this.personNameToId = this.personNameToId.set(oldMap.keyOf(this.selectedId), this.selectedId);
       }
     });
-    dataService.yearRange.subscribe(([min, max]) => {
+    this.dataService.yearRange.subscribe(([min, max]) => {
       const currentYear = (new Date()).getFullYear();
-      const youngest = currentYear - max;
-      const oldest = currentYear - min;
+      const youngest: number = 0; // currentYear - max;
+      const oldest: number = 100; // currentYear - min;
       const offset = youngest === oldest ? 1 : 0;
       const config = { start: [youngest, oldest], range: { min: youngest, max: oldest + offset } };
       this.yearRange = [min, max];
@@ -117,12 +119,9 @@ export class PersonSelectorComponent implements OnInit, OnChanges {
         Object.assign(this.ageSliderConfig, config);
       }
     });
-    dataService.education.subscribe((eds) => (this.educations = eds));
+    this.dataService.education.subscribe((eds) => (this.educations = eds));
 
     this.updateSelectable();
-  }
-
-  ngOnInit() {
   }
 
   ngOnChanges(changes: SimpleChanges) {

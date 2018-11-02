@@ -10,14 +10,22 @@ export class TransitionResolver implements Resolver {
   };
 
   async getTransitions(args, context: GraphQLContext): Promise<any> {
-    let where = ' LIMIT 1000';
-    if (args.filter && args.filter.user_id) {
-      where = `
-        WHERE user_id = ${args.filter.user_id}
-      `;
+    let query = 'SELECT * FROM learning_trajectories.transitions';
+    const where = [], params: any = {};
+    if (args.filter) {
+      if (args.filter.user_id) {
+        where.push('user_id = @user_id AND direction != \'sl\'');
+        params.user_id = Number(args.filter.user_id);
+      }
     }
-    const query = `SELECT * FROM learning_trajectories.transitions ${where}`;
-    const transitions = await context.db.query(query);
-    return transitions[0].map(t => (t.time = t.time ? t.time.value : null, t));
+    if (where.length === 0) {
+      // query += ' LIMIT 1000';
+      return [];
+    } else {
+      query += ` WHERE ${where.join(' AND ')}`;
+    }
+    console.log(JSON.stringify({query, params}));
+    const results = await context.db.query({query, params});
+    return results[0].map(t => (t.time = t.time ? t.time.value : null, t));
   }
 }

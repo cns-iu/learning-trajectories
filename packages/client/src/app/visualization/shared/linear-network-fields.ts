@@ -70,11 +70,12 @@ export const edgeIdField = simpleField({
 export const edgeOrderField = simpleField({
   label: 'Edge Order',
   operator: chain(access<string>('timestamp'), map((t) => {
-    const re = /(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/;
-    const match = re.exec(t);
-    const [year, month, day, hour, minute, second] = match.slice(1).map(Number);
-    const date = new Date(year, month, day, hour, minute, second);
-    return +date;
+    return +(new Date(t));
+    // const re = /(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/;
+    // const match = re.exec(t);
+    // const [year, month, day, hour, minute, second] = match.slice(1).map(Number);
+    // const date = new Date(year, month, day, hour, minute, second);
+    // return +date;
   }))
 });
 

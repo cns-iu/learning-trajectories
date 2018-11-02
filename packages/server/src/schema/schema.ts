@@ -9,7 +9,9 @@ export const typeDefs = gql`
     category: String
     name: String
     chapter_id: String
+    chapter_name: String
     sequential_id: String
+    sequential_name: String
     vertical_id: String
     level: Int
     index: Int
@@ -39,7 +41,9 @@ export const typeDefs = gql`
     index: Int
     first_leaf_index: Int
     module_id: String
+    module_label: String
     next_module_id: String
+    next_module_label: String
     next_index: Int
     next_first_leaf_index: Int
     direction: String
@@ -56,7 +60,7 @@ export const typeDefs = gql`
 
   input StudentFilter {
     user_id: String
-    age: NumericBounds
+    born: NumericBounds
     grade: NumericBounds
     education: String
     course: String
@@ -64,6 +68,7 @@ export const typeDefs = gql`
 
   input Filter {
     user_id: String
+    includeUnused: Boolean
   }
 
   type Query {

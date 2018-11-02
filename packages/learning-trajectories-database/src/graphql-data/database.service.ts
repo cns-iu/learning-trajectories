@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import { GraphQLClient } from 'graphql-request';
-import 'rxjs/add/observable/defer';
+import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/operator/map';
 
 import { Filter, MetaFilter } from '../shared/filter';
@@ -18,6 +18,7 @@ import { GraphQLFilter, GraphQLStudentFilter } from './graphql-filter';
 export class GraphQLDatabaseService extends DatabaseService {
   endpoint = 'http://localhost:4000/graphql'; // TODO: make configurable
   client: GraphQLClient;
+  private cache: any = {};
 
   constructor() {
     super();
@@ -27,15 +28,18 @@ export class GraphQLDatabaseService extends DatabaseService {
     });
 
     // TODO: Remove me when finished testing/implementing
-    this.getPersonNames({grade: [0,3], age: [20,25], course:"MITProfessionalX/SysEngxB1/3T2016"}).subscribe(console.log);
     console.log(this);
   }
 
-  query<T = any>(query: string, selector: string, vars?: any): Observable<T[]> {
-    return Observable.defer(async () => {
-      const results = await this.client.request(query, vars);
-      return results[selector];
-    });
+  query<T = any>(query: string, selector: string, vars?: any, ignoreCache?: boolean): Observable<T[]> {
+    const key = JSON.stringify({query, vars});
+    if (!this.cache.hasOwnProperty(key)) {
+      this.cache[key] = (async () => {
+        const results = (await this.client.request(query, vars))[selector];
+        return results;
+      })();
+    }
+    return Observable.fromPromise(this.cache[key]);
   }
 
   getNodes(filter?: Partial<Filter>): Observable<CourseModule[]> {
@@ -70,7 +74,7 @@ export class GraphQLDatabaseService extends DatabaseService {
     });
   }
   getPersonMetaData(filter?: Partial<Filter>) : Observable<PersonMetaData> {
-    return this.query<PersonMetaData>(getStudentsQuery, 'students', {filter: new GraphQLStudentFilter(filter)})
-      .map(results => results.length ? asPersonMetaData(results[0]) : null);
+    return this.query(getStudentsQuery, 'students', {filter: new GraphQLStudentFilter(filter)})
+      .map(results => filter ? (results.length ? asPersonMetaData(results[0]) : null) : <any>results.map(asPersonMetaData));
   }
 }

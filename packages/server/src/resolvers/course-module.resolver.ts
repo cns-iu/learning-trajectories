@@ -10,17 +10,32 @@ export class CourseModuleResolver implements Resolver {
   };
 
   async getCourseModules(args, context: GraphQLContext): Promise<any> {
-    let where = ' LIMIT 1000';
-    if (args.filter && args.filter.user_id ) {
-      where = `
-        WHERE course_id in (
+    let query = 'SELECT * FROM learning_trajectories.course_modules';
+    const where = [], params: any = {};
+    if (args.filter) {
+      if (args.filter.user_id) {
+        where.push(`course_id in (
           SELECT course_id from learning_trajectories.students
-          WHERE user_id = ${args.filter.user_id}
-        )
-      `;
+          WHERE user_id = @user_id
+        )`);
+        params.user_id = Number(args.filter.user_id);
+
+        if (!args.filter.includeUnused) {
+          where.push(`module_id in (
+            SELECT module_id from learning_trajectories.transitions
+            WHERE user_id = @user_id
+          )`);
+        }
+      }
     }
-    const query = `SELECT * FROM learning_trajectories.course_modules ${where}`;
-    const courseModules = await context.db.query(query);
-    return courseModules[0];
+    if (where.length === 0) {
+      // query += ' LIMIT 1000';
+      return [];
+    } else {
+      query += ` WHERE ${where.join(' AND ')}`;
+    }
+    console.log(JSON.stringify({query, params}));
+    const results = await context.db.query({query, params});
+    return results[0];
   }
 }

@@ -48,7 +48,7 @@ export class VisualizationDataService {
   readonly edgeSizeField = simpleField({
     label: 'Edge Size',
     operator: chain(access<number>('distance'), map((d) => {
-      return d;
+      return Math.abs(d);
     }))
   });
 
@@ -86,9 +86,7 @@ export class VisualizationDataService {
     }).map(RawChangeSet.fromArray);
   }
 
-  getPersonMetaData(filter: Partial<Filter> = {}): PersonMetaData {
-    let personMetaData: PersonMetaData;
-    this.database.getPersonMetaData(filter).subscribe((m) => personMetaData = m);
-    return personMetaData;
+  getPersonMetaData(filter: Partial<Filter> = {}): Observable<PersonMetaData> {
+    return this.database.getPersonMetaData(filter);
   }
 }

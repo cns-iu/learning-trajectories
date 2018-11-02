@@ -25,7 +25,7 @@
     </app-visualization-legends>
   </mat-sidenav>
 
-  <mat-sidenav-content *ngIf="personSelector.selectedId">
+  <mat-sidenav-content>
     <div class="person-metadata">
       <div class="course-title">{{ courseSelector.selectedCourse?.title }}</div>
       <table class="metadata">
@@ -38,10 +38,10 @@
         </tr>
         <tr>
           <td align="center">{{ personSelector.selectedName }} </td>
-          <td >{{ wrapper.personMetaData?.grade }} </td>
-          <td>{{ wrapper.personMetaData?.gender }} </td>
-          <td>{{ wrapper.personMetaData?.levelOfEducation }} </td>
-          <td>{{ wrapper.personMetaData?.born }} </td>
+          <td >{{ (wrapper.personMetaData | async)?.grade }} </td>
+          <td>{{ (wrapper.personMetaData | async)?.gender }} </td>
+          <td>{{ (wrapper.personMetaData | async)?.levelOfEducation }} </td>
+          <td>{{ (wrapper.personMetaData | async)?.born }} </td>
         </tr>
       </table>
     </div>

@@ -12,7 +12,9 @@ export const getCourseModulesQuery = `
         category
         name
         chapter_id
+        chapter_name
         sequential_id
+        sequential_name
         vertical_id
         level
         index
@@ -29,16 +31,16 @@ export function asCourseModule(data: any): CourseModule {
     description: data.name,
 
     level2Id: data.sequential_id,
-    level2Label: data.sequential_id, // TODO
+    level2Label: data.sequential_name || '',
     level1Id: data.chapter_id,
-    level1Label: data.chapter_id, // TODO
+    level1Label: data.chapter_name || '',
 
     order: data.first_leaf_index,
     // TODO: Verify if below used, before creating queries
     uniqueStudents: 0,
     sessions: 0,
     days: 0,
-    events: 0,
+    events: 10, // TODO
     totalTime: 0,
     forwardIndegree: 0,
     backwardIndegree: 0,
@@ -56,7 +58,9 @@ export const getTransitionsQuery = `
       index
       first_leaf_index
       module_id
+      module_label
       next_module_id
+      next_module_label
       next_index
       next_first_leaf_index
       direction
@@ -73,8 +77,8 @@ export function asTransition(data: any): Transition {
     source: data.module_id,
     target: data.next_module_id,
 
-    sourceModule: {id: data.module_id}, // TODO
-    targetModule: {id: data.next_module_id}, // TODO
+    sourceModule: {id: data.module_id, level2Label: data.module_label}, // TODO
+    targetModule: {id: data.next_module_id, level2Label: data.next_module_label}, // TODO
 
     sourceOrder: data.first_leaf_index,
     sourceSessionId: '', // TODO: Unused?
@@ -91,7 +95,7 @@ export function asTransition(data: any): Transition {
 
     selfLoopFlag: data.direction === 'sl',
 
-    count: 0, // TODO: Unused?
+    count: 10, // TODO: Unused?
   };
 }
 
