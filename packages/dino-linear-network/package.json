@@ -19,6 +19,7 @@
     }
   },
   "dependencies": {
+    "@angular/cli": "^7.0.4",
     "@angular/common": "^5.0.0",
     "@angular/compiler": "^5.0.0",
     "@angular/core": "^5.0.0",
@@ -31,7 +32,7 @@
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
-    "@angular/cli": "^1.6.1",
+    "@angular/cli": "^7.0.4",
     "@angular/compiler-cli": "^5.0.0",
     "@angular/language-service": "^5.0.0",
     "@types/d3": "^4.12.0",
