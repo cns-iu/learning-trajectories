@@ -16,7 +16,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const PORT = Number(process.env.PORT) || 4000;
-const HOSTNAME = process.env.HOSTNAME || '0.0.0.0';
+const LISTEN_ADDR = process.env.LISTEN_ADDR || '0.0.0.0';
 const BIG_QUERY_PROJECT = process.env.BIG_QUERY_PROJECT || 'bl-sice-edx-la-visualizations';
 const CLIENT_BUILD = process.env.CLIENT_BUILD || '../../client/dist';
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || null;
@@ -50,6 +50,6 @@ server.applyMiddleware({ app });
 const httpServer = createServer(app);
 
 // Add a listener for our server on the correct ports
-httpServer.listen(PORT, HOSTNAME, 511, () => {
-  console.log(`🚀 Server ready at http://${HOSTNAME}:${PORT}`);
+httpServer.listen(PORT, LISTEN_ADDR, 511, () => {
+  console.log(`🚀 Server ready at http://${LISTEN_ADDR}:${PORT}`);
 });
