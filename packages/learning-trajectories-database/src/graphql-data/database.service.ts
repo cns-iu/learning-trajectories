@@ -16,7 +16,7 @@ import { GraphQLFilter, GraphQLStudentFilter } from './graphql-filter';
 
 @Injectable()
 export class GraphQLDatabaseService extends DatabaseService {
-  endpoint = 'http://localhost:4000/graphql'; // TODO: make configurable
+  endpoint = '/graphql'; // TODO: make configurable
   client: GraphQLClient;
   private cache: any = {};
 
@@ -26,9 +26,6 @@ export class GraphQLDatabaseService extends DatabaseService {
       credentials: 'include',
       mode: 'cors'
     });
-
-    // TODO: Remove me when finished testing/implementing
-    console.log(this);
   }
 
   query<T = any>(query: string, selector: string, vars?: any, ignoreCache?: boolean): Observable<T[]> {

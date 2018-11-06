@@ -19,6 +19,8 @@ export const getCourseModulesQuery = `
         level
         index
         first_leaf_index
+        events
+        duration
       }
     }
 `;
@@ -31,17 +33,18 @@ export function asCourseModule(data: any): CourseModule {
     description: data.name,
 
     level2Id: data.sequential_id,
-    level2Label: data.sequential_name || '',
+    level2Label: data.sequential_name || data.name || '',
     level1Id: data.chapter_id,
     level1Label: data.chapter_name || '',
 
     order: data.first_leaf_index,
+
     // TODO: Verify if below used, before creating queries
     uniqueStudents: 0,
     sessions: 0,
     days: 0,
-    events: 10, // TODO
-    totalTime: 0,
+    events: data.events || 0,
+    totalTime: data.duration || 0,
     forwardIndegree: 0,
     backwardIndegree: 0,
     forwardOutdegree: 0,

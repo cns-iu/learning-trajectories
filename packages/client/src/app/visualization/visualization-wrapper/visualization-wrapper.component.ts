@@ -25,6 +25,7 @@ import * as fields from '../shared/linear-network-fields';
 export class VisualizationWrapperComponent implements OnInit, OnChanges {
   @Input() selectedControl: Observable<string>;
   @Input() personSelected: string;
+  @Input() courseSelected: string;
   @Input() overflow = false; // visualization page overflow toggle
   @Input() includeUnused = false; // Show nodes with no edges
 
@@ -81,12 +82,13 @@ export class VisualizationWrapperComponent implements OnInit, OnChanges {
       });
     }
 
-    if ('personSelected' in changes || 'includeUnused' in changes) {
+    if ('personSelected' in changes || 'includeUnused' in changes || 'courseSelected' in changes) {
       const filter = {
+        course: this.courseSelected,
         personName: this.personSelected,
         includeUnused: this.includeUnused
       };
-      
+
       this.nodeStream = this.service.getNodes(filter);
       this.edgeStream = this.service.getEdges(filter);
       this.personMetaData = this.service.getPersonMetaData(filter);

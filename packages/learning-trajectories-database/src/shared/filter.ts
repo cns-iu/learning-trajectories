@@ -1,4 +1,5 @@
 export interface Filter {
+  course: string;
   personName: string;
   includeUnused: boolean;
 }

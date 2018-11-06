@@ -16,6 +16,8 @@ export const typeDefs = gql`
     level: Int
     index: Int
     first_leaf_index: Int
+    events: Int
+    duration: Float
   }
 
   type Course {
@@ -68,6 +70,7 @@ export const typeDefs = gql`
 
   input Filter {
     user_id: String
+    course: String
     includeUnused: Boolean
   }
 
