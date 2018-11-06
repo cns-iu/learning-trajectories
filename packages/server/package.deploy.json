@@ -1,6 +1,6 @@
 {
   "name": "@cns-iu/learning-trajectories-server",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "license": "MIT",
   "main": "server.js",
   "bin": {
