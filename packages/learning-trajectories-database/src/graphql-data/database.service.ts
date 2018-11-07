@@ -16,7 +16,7 @@ import { GraphQLFilter, GraphQLStudentFilter } from './graphql-filter';
 
 @Injectable()
 export class GraphQLDatabaseService extends DatabaseService {
-  endpoint = '/graphql'; // TODO: make configurable
+  endpoint = 'graphql'; // TODO: make configurable
   client: GraphQLClient;
   private cache: any = {};
 

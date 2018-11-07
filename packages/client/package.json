@@ -6,6 +6,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --prod --no-aot --base-href=./",
+    "build-prod": "ng build --prod --no-aot --base-href=/client/learning-trajectories/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

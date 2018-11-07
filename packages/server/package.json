@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsc",
-    "build:client": "cd ../client; npm run build",
+    "build:client": "cd ../client; npm run build-prod",
     "watch:build": "tsc --watch",
     "watch:server": "nodemon './dist/server.js' --watch './dist'",
     "start": "npm-run-all clean build --parallel watch:build watch:server --print-label",
@@ -16,7 +16,7 @@
     "deploy:client": "rimraf dist/client && cp -r ../client/dist dist/client",
     "deploy:package": "cp package.deploy.json dist/package.json; cp env.example dist",
     "deploy:pack": "cd dist; npm install; npm shrinkwrap; npm pack",
-    "deploy": "npm-run-all clean build build:client deploy:client deploy:package deploy:pack",
+    "deploy": "npm-run-all clean build build:client deploy:client deploy:package",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
