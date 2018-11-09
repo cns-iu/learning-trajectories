@@ -1,0 +1,25 @@
+@import '~typeface-oswald/index.css'
+@import '~typeface-open-sans/index.css'
+@import '~typeface-roboto-mono/index.css'
+
+@import '~@angular/material/theming'
+
+$r-normal : 'Roboto', sans-serif
+$r-mono: 'Roboto Mono', monospace
+$oswald: 'Oswald', sans-serif
+
+
+$headline: mat-typography-level(32px, 48px, 700)
+$body-1: mat-typography-level(16px, 24px, 500)
+
+$general-typography : mat-typography-config($font-family: quote($r-normal $r-mono))
+
+@include mat-core($general-typography)
+
+// $custom-typography: mat-typography-config($open-sans $oswald)
+//
+// @include mat-core($custom-typography)
+
+// $custom-typography: mat-typography-config($font-family: 'Oswald', monospace $headline: mat-typography-level(32px, 48px, 700) $body-1: mat-typography-level(16px, 24px, 500))
+//
+// @include mat-core($custom-typography)

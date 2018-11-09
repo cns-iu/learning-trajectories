@@ -1,0 +1,26 @@
+<div>
+  <dino-linear-network
+    [nodeStream]="nodeStream"
+    [nodeIdField]="fields.nodeIdField"
+    [nodeOrderField]="fields.nodeOrderField"
+    [nodeWeightField]="fields.nodeWeightField"
+    [nodeColorField]="fields.nodeColorField"
+    [nodeTooltipField]="fields.nodeTooltipField"
+    [nodeLabelField]="fields.nodeLabelField"
+
+    [edgeStream]="edgeStream"
+    [edgeIdField]="fields.edgeIdField"
+    [edgeOrderField]="fields.edgeOrderField"
+    [edgeWeightField]="fields.edgeWeightField"
+    [edgeSourceField]="fields.edgeSourceField"
+    [edgeTargetField]="fields.edgeTargetField"
+    [edgeColorField]="fields.edgeColorField"
+    [edgeTooltipField]="fields.edgeTooltipField"
+
+    [overflow]="overflow"
+    [edgeHeight]="'90%'"
+    [animDuration]="animationDuration"
+    (animEvents)="animationEvents.next($event)"
+    (nodeSizeFactorChange)="onNodeSizeFactorChange($event)">
+  </dino-linear-network>
+</div>

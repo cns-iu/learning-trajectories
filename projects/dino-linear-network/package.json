@@ -1,0 +1,28 @@
+{
+  "name": "dino-linear-network",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^7.0.2",
+    "@angular/core": "^7.0.2",
+	  "@ngx-dino/core": "^0.9.0",
+    "body-parser": "^1.18.2",
+    "core-js": "^2.4.1",
+    "cors": "^2.8.4",
+    "dotenv-webpack": "^1.5.5",
+    "graphql-request": "^1.8.2",
+    "http": "^0.0.0",
+    "immutable": "^4.0.0-rc.12",
+    "mkdirp": "^0.5.1",
+    "moment": "^2.20.0",
+    "morgan": "^1.8.1",
+    "path": "^0.12.7",
+    "rxdb": "^8.0.3",
+    "rxjs": "^6.3.3",
+    "start-server-webpack-plugin": "^2.2.5",
+    "subscriptions-transport-ws": "^0.9.7",
+    "webpack-node-externals": "^1.6.0",
+    "xlsx": "^0.14.0",
+    "zipcodes": "^8.0.0",
+    "zone.js": "^0.8.19"
+  }
+}

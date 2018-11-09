@@ -1,0 +1,39 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "resolveJsonModule": false,
+    "sourceMap": true,
+    "declaration": false,
+    "module": "es2015",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "dino-linear-network": [
+        "dist/dino-linear-network"
+      ],
+      "dino-linear-network/*": [
+        "dist/dino-linear-network/*"
+      ],
+      "learning-trajectories-database": [
+        "packages/learning-trajectories-database"
+      ],
+      "raw-data": [
+        "raw-data"
+      ],
+      "raw-data/*": [
+        "raw-data/*"
+      ]
+    }
+  }
+}
